@@ -1,4 +1,5 @@
 ﻿using Core;
+using Game.Selectables;
 using Tools;
 using UniRx;
 using UnityEngine;
@@ -30,20 +31,38 @@ namespace Game.Character
         private void OnViewLoaded(GameObject view)
         {
             _view = GameObject.Instantiate(view, _ctx.startPosition, Quaternion.identity).GetComponent<CharacterView>();
+
+            ReactiveProperty<ISelectable> selectable = new ReactiveProperty<ISelectable>();
+            ReactiveProperty<Vector3> newPosition = new ReactiveProperty<Vector3>();
+            CharacterModel characterModel = new CharacterModel
+            {
+                Speed = new ReactiveProperty<float>(3f)
+            };
             CharacterMovePm.Ctx characterMoveCtx = new CharacterMovePm.Ctx
             {
-                speed = 1f,
+                model = characterModel,
                 view = _view,
-                targetPosition = _targetPosition
+                targetPosition = _targetPosition,
             };
             AddDispose(new CharacterMovePm(characterMoveCtx));
 
             CharacterTargeter.Ctx targeterCtx = new CharacterTargeter.Ctx
             {
-                targetPosition = _targetPosition,
-                camera = _ctx.camera
+                targetPosition = newPosition,
+                selectable = selectable,
+                camera = _ctx.camera,
+                
             };
             AddDispose(new CharacterTargeter(targeterCtx));
+
+            CharacterChangeState.Ctx changeStateCtx = new CharacterChangeState.Ctx
+            {
+                selectable = selectable,
+                newPosition = newPosition,
+                targetPosition = _targetPosition,
+                model = characterModel
+            };
+            AddDispose(new CharacterChangeState(changeStateCtx));
         }
     }
 }

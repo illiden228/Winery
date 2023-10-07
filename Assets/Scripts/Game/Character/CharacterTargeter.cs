@@ -1,4 +1,5 @@
 ﻿using Core;
+using Game.Selectables;
 using Tools.Extensions;
 using UniRx;
 using UnityEngine;
@@ -9,6 +10,7 @@ namespace Game.Character
     {
         public struct Ctx
         {
+            public ReactiveProperty<ISelectable> selectable;
             public ReactiveProperty<Vector3> targetPosition;
             public Camera camera;
         }
@@ -25,9 +27,30 @@ namespace Game.Character
         {
             if (Input.GetMouseButtonDown(0))
             {
-                if (Physics.Raycast(_ctx.camera.ScreenPointToRay(Input.mousePosition), out var hit, Mathf.Infinity, Layers.GroundLayer))
+                Ray ray = _ctx.camera.ScreenPointToRay(Input.mousePosition);
+                RaycastGround(ray);
+                RaycastSelectables(ray);
+            }
+        }
+
+        private void RaycastGround(Ray ray)
+        {
+            if(Physics.Raycast(ray, out var hit, Mathf.Infinity, Layers.GroundMask))
+                _ctx.targetPosition.Value = hit.point;
+        }
+        
+        private void RaycastSelectables(Ray ray)
+        {
+            ISelectable selectable = null;
+
+            RaycastHit[] hits = Physics.RaycastAll(ray, Mathf.Infinity, Layers.SelectablesMask);
+            foreach (var raycastHit in hits)
+            {
+                if (selectable == null)
                 {
-                    _ctx.targetPosition.Value = hit.point;
+                    selectable = raycastHit.collider.GetComponent<ISelectable>();
+                    _ctx.selectable.Value = selectable;
+                    break;
                 }
             }
         }

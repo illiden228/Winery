@@ -1,5 +1,6 @@
 ﻿using System;
 using Core;
+using TMPro;
 using Tools.Extensions;
 using UniRx;
 using UnityEngine;
@@ -12,7 +13,7 @@ namespace Game.Character
         {
             public IReadOnlyReactiveProperty<Vector3> targetPosition;
             public CharacterView view;
-            public float speed;
+            public CharacterModel model;
         }
 
         private readonly Ctx _ctx;
@@ -26,11 +27,14 @@ namespace Game.Character
             {
                 if (_moveDisposable != null)
                     _moveDisposable.Dispose();
-
+                _ctx.model.IsMove.Value = true;
                 _moveDisposable = ReactiveExtensions.StartUpdate(() =>
                 {
                     if (!TryMoveToPosition(position))
+                    {
                         _moveDisposable.Dispose();
+                        _ctx.model.IsMove.Value = false;
+                    }
                 });
             }));
         }
@@ -41,8 +45,9 @@ namespace Game.Character
             bool canMove = distance.sqrMagnitude > 0.001f;
             _ctx.view.transform.forward = distance;
             if (canMove)
-                _ctx.view.transform.position = Vector3.MoveTowards(_ctx.view.transform.position, position, _ctx.speed * Time.deltaTime);
-
+            {
+                _ctx.view.transform.position = Vector3.MoveTowards(_ctx.view.transform.position, position, _ctx.model.Speed.Value * Time.deltaTime);
+            }
             return canMove;
         }
 
