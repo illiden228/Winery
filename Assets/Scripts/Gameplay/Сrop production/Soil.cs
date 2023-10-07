@@ -2,14 +2,13 @@ using Core;
 using NaughtyAttributes;
 using System;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class Soil : BaseMonobehaviour
 {
     public enum SoilState
     {
         Empty,
-        Grows,                
+        Grows,
         GrownUp
     }
 
@@ -52,25 +51,22 @@ public class Soil : BaseMonobehaviour
         if (_growable != null)
             _growable.UpdateGrowth(deltaTime);
     }
-
-    public void CallAction(SoilAction soilAction, Action<int> amountCallBack)
+        
+    public void PlaceGrowable(Plant plantPrefab, Action<bool> callBack)
     {
-        switch(soilAction)
+        if (_currentSoilState != SoilState.Empty)
         {
-            case SoilAction.PlaceGrowable:
-                {
-                    break;
-                }
-            case SoilAction.WaterGrowable:
-                {
-                    break;
-                }
-            case SoilAction.Harvest:
-                {
-                    if (_growable.Grown)
-                        amountCallBack?.Invoke(1);
-                    break;
-                }
+            callBack?.Invoke(false);
+            Debug.Log("Soil is slot occupied!");
         }
+
+        //temp
+        _plantPrefab = plantPrefab;
+        //
+
+        //to do: replace with pool
+        _growable = Instantiate(_plantPrefab, transform);
+
+        callBack?.Invoke(true);
     }
 }
