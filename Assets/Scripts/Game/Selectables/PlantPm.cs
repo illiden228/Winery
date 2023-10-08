@@ -1,6 +1,7 @@
 using Core;
 using System;
 using System.Diagnostics;
+using Data;
 using Tools.Extensions;
 using UnityEngine;
 
@@ -9,7 +10,7 @@ public class PlantPm : BaseDisposable, IGrowable
     public struct Ctx
     {
         public PlantView plantView;
-        public PlantAsset asset;
+        public SeedlingData seedling;
     }
 
     private readonly Ctx _ctx;
@@ -17,15 +18,15 @@ public class PlantPm : BaseDisposable, IGrowable
     private int _currentStage;
     private IDisposable _updateGrowthDisposable;
 
-    public bool Grown => _currentStage == _ctx.asset.StageCount;
+    public bool Grown => _currentStage == _ctx.seedling.Plant.StageCount;
 
     public PlantPm(Ctx ctx)
     {
         _ctx = ctx;
-        _ctx.plantView.Init(new PlantView.Ctx { growthTime = _ctx.asset.GrowthTime });
+        _ctx.plantView.Init(new PlantView.Ctx { growthTime = _ctx.seedling.Plant.GrowthTime });
         _currentStage = 1;
         _ctx.plantView.UpdatePlantView(_currentStage);
-        _updateGrowthDisposable = ReactiveExtensions.DelayedCall(_ctx.asset.GrowthTime / _ctx.asset.StageCount, UpdateGrowth);
+        _updateGrowthDisposable = ReactiveExtensions.DelayedCall(_ctx.seedling.Plant.GrowthTime / _ctx.seedling.Plant.StageCount, UpdateGrowth);
     }
 
     public void UpdateGrowth()
@@ -40,7 +41,7 @@ public class PlantPm : BaseDisposable, IGrowable
 
         _currentStage++;
         _ctx.plantView.UpdatePlantView(_currentStage, Grown);
-        _updateGrowthDisposable = ReactiveExtensions.DelayedCall(_ctx.asset.GrowthTime / _ctx.asset.StageCount, UpdateGrowth);
+        _updateGrowthDisposable = ReactiveExtensions.DelayedCall(_ctx.seedling.Plant.GrowthTime / _ctx.seedling.Plant.StageCount, UpdateGrowth);
     }
 
     protected override void OnDispose()

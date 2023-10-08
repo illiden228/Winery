@@ -1,6 +1,9 @@
-﻿using Core;
+﻿using System;
+using Core;
+using Data;
 using Game.Selectables;
 using Tools.Extensions;
+using UI.Select;
 using UniRx;
 using UnityEngine;
 
@@ -15,9 +18,11 @@ namespace Game.Character
             public ReactiveProperty<Vector3> newPosition;
             public CharacterModel model;
             public ReactiveEvent<string> animationEvent;
+            public ReactiveEvent<SelectorInfo> selectorEvent;
         }
 
         private readonly Ctx _ctx;
+        private IDisposable _selectWaiting;
 
         public CharacterChangeState(Ctx ctx)
         {
@@ -32,11 +37,35 @@ namespace Game.Character
             {
                 if (!isMove && _ctx.selectable.Value != null)
                 {
-                    _ctx.selectable.Value.Select();
-                    _ctx.animationEvent.Notify(CharacterAnimation.Triggers.Take);
-                    _ctx.selectable.Value = null;
+                    ReactiveProperty<Item> item = new ReactiveProperty<Item>();
+                    
+                    if(_selectWaiting != null)
+                        _selectWaiting.Dispose();
+
+                    _selectWaiting = item.SkipLatestValueOnSubscribe().Subscribe(item =>
+                    {
+                        _ctx.selectable.Value.Select(item);
+                        _ctx.animationEvent.Notify(CharacterAnimation.Triggers.Take);
+                        _ctx.selectable.Value = null;
+                    });
+                        
+                    _ctx.selectorEvent.Notify(new SelectorInfo
+                    {
+                        Item = item,
+                        Open = true
+                    });
+                    
+                    
                 }
             }));
+            
+            
+        }
+
+        protected override void OnDispose()
+        {
+            _selectWaiting?.Dispose();
+            base.OnDispose();
         }
     }
 }

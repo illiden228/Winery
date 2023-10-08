@@ -1,4 +1,5 @@
 ﻿using Core;
+using Data;
 using UnityEngine;
 
 namespace Game.Factories
@@ -18,16 +19,15 @@ namespace Game.Factories
             _ctx = ctx;
         }
 
-        public PlantPm GetPlantPmCtxById(string id, Transform parent)
+        public PlantPm GetPlantByItem(SeedlingData item, Transform parent)
         {
-            PlantAsset plantAsset = _ctx.plantCatalog.GetPlantAssetById(id);
             PlantView plantView = GameObject.Instantiate(_ctx.plantCatalog.GetPlantAssetById("IsabellaGrape").View);
             plantView.transform.SetParent(parent, false);
 
             return new PlantPm(new PlantPm.Ctx
             {
                 plantView = plantView,
-                asset = plantAsset
+                seedling = item
             });
         }
     }

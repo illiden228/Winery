@@ -34,7 +34,7 @@ public class PlantView : BaseMonobehaviour
 
         if (plantGrown )
         {
-            Debug.Log("Росток вырос!");
+            Debug.Log("Р РѕСЃС‚РѕРє РІС‹СЂРѕСЃ!");
 
             if (_grownEffect)
                 _grownEffect.Play();

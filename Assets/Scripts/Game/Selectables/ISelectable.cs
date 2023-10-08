@@ -1,7 +1,9 @@
-﻿namespace Game.Selectables
+﻿using Data;
+
+namespace Game.Selectables
 {
     public interface ISelectable
     {
-        public void Select();
+        public void Select(Item item);
     }
 }
