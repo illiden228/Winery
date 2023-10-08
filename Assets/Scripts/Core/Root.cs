@@ -18,8 +18,6 @@ public class Root : BaseMonobehaviour
     [SerializeField] private List<SoilView> _soils;    
     [SerializeField] private PlantCatalog _plantCatalog;
     [SerializeField] private Canvas _mainCanvas;
-    [SerializeField] private List<SoilView> _soils;
-    [SerializeField] private List<PlantAsset> _plants;
     private IResourceLoader _resourceLoader;
     private CharacterPm _character;
     private Inventory _inventory;
@@ -85,7 +83,7 @@ public class Root : BaseMonobehaviour
         };
         _hud = new MainHUDPm(hudCtx);
 
-        foreach (var plant in _plants)
+        foreach (var plant in _plantCatalog.GetCatalog())
         {
             _seedlings.Add(new SeedlingData
             {
