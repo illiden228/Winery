@@ -23,6 +23,7 @@ namespace Game.Character
 
         private readonly Ctx _ctx;
         private IDisposable _selectWaiting;
+        private SelectableStatus _currentStatus;
 
         public CharacterChangeState(Ctx ctx)
         {
@@ -37,15 +38,21 @@ namespace Game.Character
             {
                 if (!isMove && _ctx.selectable.Value != null)
                 {
+                    if (_currentStatus == null)
+                        return;
+                    
+                    if (!_currentStatus.NeedSelector)
+                    {
+                        Select(null, _currentStatus.AnimationTriggerName);
+                    }
+                        
                     ReactiveProperty<Item> item = new ReactiveProperty<Item>();
                     
                     _selectWaiting?.Dispose();
 
                     _selectWaiting = item.SkipLatestValueOnSubscribe().Subscribe(item =>
                     {
-                        _ctx.selectable.Value.Select(item);
-                        _ctx.animationEvent.Notify(CharacterAnimation.Triggers.Take);
-                        _ctx.selectable.Value = null;
+                        Select(item, _currentStatus.AnimationTriggerName);
                     });
                         
                     _ctx.selectorEvent.Notify(new SelectorInfo
@@ -56,6 +63,8 @@ namespace Game.Character
                 }
                 else
                 {
+                    if(_currentStatus == null || !_currentStatus.NeedSelector)
+                        return;
                     _selectWaiting?.Dispose();
                     _ctx.selectable.Value = null;
                     _ctx.selectorEvent.Notify(new SelectorInfo
@@ -64,8 +73,24 @@ namespace Game.Character
                     });
                 }
             }));
-            
-            
+
+            AddDispose(_ctx.selectable.Subscribe(selectable =>
+            {
+                if (selectable == null)
+                {
+                    _currentStatus = null;
+                    return;
+                }
+
+                _currentStatus = selectable.GetSelectState();
+            }));
+        }
+
+        private void Select(Item item, string animation)
+        {
+            _ctx.selectable.Value.Activate(item);
+            _ctx.animationEvent.Notify(animation);
+            _ctx.selectable.Value = null;
         }
 
         protected override void OnDispose()

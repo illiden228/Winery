@@ -4,6 +4,7 @@ namespace Game.Selectables
 {
     public interface ISelectable
     {
-        public void Select(Item item);
+        public void Activate(Item item);
+        public SelectableStatus GetSelectState();
     }
 }

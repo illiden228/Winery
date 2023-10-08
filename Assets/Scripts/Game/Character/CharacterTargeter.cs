@@ -53,7 +53,7 @@ namespace Game.Character
                 if (selectable == null)
                 {
                     selectable = raycastHit.collider.GetComponent<ISelectable>();
-                    _ctx.selectable.Value = selectable;
+                    _ctx.selectable.SetValueAndForceNotify(selectable);
                     break;
                 }
             }

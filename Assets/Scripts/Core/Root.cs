@@ -41,29 +41,7 @@ public class Root : BaseMonobehaviour
     {
         _purchaseEvent = new ReactiveEvent<Purchase>();
         _selectorEvent = new ReactiveEvent<SelectorInfo>();
-
-        _resourceLoader = new ResourcePreLoader(new ResourcePreLoader.Ctx
-        {
-            maxLoadDelay = 0f,
-            minLoadDelay = 0f
-        });
-
-        CharacterPm.Ctx characterCtx = new CharacterPm.Ctx
-        {
-            resourceLoader = _resourceLoader,
-            startPosition = _startPosition.position,
-            camera = _camera,
-            startSpeed = _startSettings.CharacterSpeed,
-            selectorEvent = _selectorEvent,
-            eventSystem = _eventSystem
-        };
-        _character = new CharacterPm(characterCtx);
-
-        _plantFactoryPm = new PlantFactory(new PlantFactory.Ctx
-        {
-            plantCatalog = _plantCatalog
-        });
-
+        
         List<SeedlingData> seedlingDatas = new List<SeedlingData>();
         foreach (var asset in _startSettings.StartPlants)
         {
@@ -80,8 +58,19 @@ public class Root : BaseMonobehaviour
                 RipeStageCount = asset.RipeStageCount,
                 SproutStageCount = asset.SproutStageCount
             });
-        }        
+        }   
 
+        _resourceLoader = new ResourcePreLoader(new ResourcePreLoader.Ctx
+        {
+            maxLoadDelay = 0f,
+            minLoadDelay = 0f
+        });
+        
+        _plantFactoryPm = new PlantFactory(new PlantFactory.Ctx
+        {
+            plantCatalog = _plantCatalog
+        });
+        
         Inventory.Ctx inventoryCtx = new Inventory.Ctx
         {
             startSeedlings = seedlingDatas
@@ -100,6 +89,17 @@ public class Root : BaseMonobehaviour
             moneys = _startSettings.StartMoneys
         };
         _profile = new Profile(profileCtx);
+
+        CharacterPm.Ctx characterCtx = new CharacterPm.Ctx
+        {
+            resourceLoader = _resourceLoader,
+            startPosition = _startPosition.position,
+            camera = _camera,
+            startSpeed = _startSettings.CharacterSpeed,
+            selectorEvent = _selectorEvent,
+            eventSystem = _eventSystem
+        };
+        _character = new CharacterPm(characterCtx);
 
         PurchaseDispatcher.Ctx purchaseDispatcherCtx = new PurchaseDispatcher.Ctx
         {
@@ -148,7 +148,8 @@ public class Root : BaseMonobehaviour
         {
             view = view,
             plantFactory = _plantFactoryPm,
-            id = id
+            id = id,
+            inventory = _inventory
         });
     }
 

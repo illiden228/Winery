@@ -1,5 +1,6 @@
 ﻿using Core;
 using Data;
+using Game.Character;
 using UnityEngine;
 using Game.Factories;
 using Game.Player;
@@ -38,20 +39,38 @@ namespace Game.Selectables
             _ctx = ctx;
             _ctx.view.Init(new SoilView.Ctx
             {
-                onSelect = OnSelect
+                onSelect = OnSelect,
+                getStatus = OnGetSelectStatus
             });
+        }
+
+        private SelectableStatus OnGetSelectStatus()
+        {
+            if (_currentPm == null)
+                return new SelectableStatus
+                {
+                    NeedSelector = true,
+                    AnimationTriggerName = CharacterAnimation.Triggers.Take
+                };
+            if(_currentPm.Ripened)
+                return new SelectableStatus
+                {
+                    NeedSelector = false,
+                    AnimationTriggerName = CharacterAnimation.Triggers.Collect
+                };
+
+            return null;
         }
 
         private void OnSelect(Item item)
         {
-            SeedlingData seedling;
-            if(item is SeedlingData)
-                seedling = item as SeedlingData;
-            else
-                return;
-
             if (_currentPm == null)
             {
+                SeedlingData seedling;
+                if(item is SeedlingData)
+                    seedling = item as SeedlingData;
+                else
+                    return;
                 _currentPm = (_ctx.plantFactory.GetPlantPmCtxById(seedling, _ctx.view.transform));
 
                 Debug.Log($"Выбрана грядка {_ctx.id} и посажен росток {seedling.Name}!");
