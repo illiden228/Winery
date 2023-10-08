@@ -1,5 +1,6 @@
 ﻿using Core;
 using UnityEngine;
+using Game.Factories;
 
 namespace Game.Selectables
 {
@@ -8,9 +9,10 @@ namespace Game.Selectables
         public struct Ctx
         {
             public SoilView view;
+            public PlantFactoryPm plantFactory;
             public int id;
         }
-        
+
         public enum SoilState
         {
             Empty,
@@ -26,7 +28,7 @@ namespace Game.Selectables
         }
 
         private readonly Ctx _ctx;
-        private Plant _currentPlant;
+        private PlantPm _currentPm;
 
         public SoilPm(Ctx ctx)
         {
@@ -39,7 +41,10 @@ namespace Game.Selectables
 
         private void OnSelect()
         {
-            Debug.Log($"Выьрана грядка {_ctx.id}");
+            if (_currentPm == null)
+                _currentPm = (_ctx.plantFactory.GetPlantPmCtxById("IsabellaGrape", _ctx.view.transform));
+
+            Debug.Log($"Выбрана грядка {_ctx.id}");
         }
     }
 }
