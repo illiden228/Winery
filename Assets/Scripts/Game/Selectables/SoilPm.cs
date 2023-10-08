@@ -19,20 +19,6 @@ namespace Game.Selectables
             public int id;
         }
 
-        public enum SoilState
-        {
-            Empty,
-            Grows,
-            GrownUp
-        }
-
-        public enum SoilAction
-        {
-            PlaceGrowable,
-            WaterGrowable,
-            Harvest
-        }
-
         private readonly Ctx _ctx;
         private PlantPm _currentPm;
 

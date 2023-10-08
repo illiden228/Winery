@@ -31,7 +31,7 @@ namespace Factories
                     {
                         PlantAsset plantAsset = _ctx.plantCatalog.GetAssetById<PlantAsset>(asset.Id);
                         item = new SeedlingData
-                         {
+                        {
                             Id = plantAsset.Id,
                             Name = plantAsset.Name,
                             MaxCount = plantAsset.MaxStackCount,
@@ -54,31 +54,35 @@ namespace Factories
                             Id = grapeAsset.Id,
                             Name = grapeAsset.Name,
                             Icon = grapeAsset.Icon,
-                            Count = count
-    };
+                            Count = count,
+                            ProductionTime = grapeAsset.ProductionTime,
+                            Production = grapeAsset.Production
+                        };
                         break;
                     }
                 case JuiceAsset:
                     {
-                        JuiceAsset grapeAsset = _ctx.juiceCatalog.GetAssetById<JuiceAsset>(asset.Id);
+                        JuiceAsset juiceAsset = _ctx.juiceCatalog.GetAssetById<JuiceAsset>(asset.Id);
                         item = new JuiceData
                         {
-                            Id = grapeAsset.Id,
-                            Name = grapeAsset.Name,
-                            Icon = grapeAsset.Icon,
-                            Count = count
+                            Id = juiceAsset.Id,
+                            Name = juiceAsset.Name,
+                            Icon = juiceAsset.Icon,
+                            Count = count,
+                            ProductionTime = juiceAsset.ProductionTime,
+                            Production = juiceAsset.Production
                         };
                         break;
                     }
                 case WineAsset:
                     {
-                        WineAsset grapeAsset = _ctx.wineCatalog.GetAssetById<WineAsset>(asset.Id);
+                        WineAsset wineAsset = _ctx.wineCatalog.GetAssetById<WineAsset>(asset.Id);
                         item = new WineData
                         {
-                            Id = grapeAsset.Id,
-                            Name = grapeAsset.Name,
-                            Icon = grapeAsset.Icon,
-                            Count = count
+                            Id = wineAsset.Id,
+                            Name = wineAsset.Name,
+                            Icon = wineAsset.Icon,
+                            Count = count                            
                         };
                         break;
                     }

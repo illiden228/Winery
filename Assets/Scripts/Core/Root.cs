@@ -44,6 +44,7 @@ public class Root : BaseMonobehaviour
     private SelectorPm _selector;
     private MainHUDPm _hud;
     private List<SoilPm> _soilPms = new List<SoilPm>();
+    private List<JuicerPm> _juicerPms = new List<JuicerPm>();
     private PlantFactory _plantFactoryPm;
     private ItemDataFactory _itemDataFactory;
     private PurchaseDispatcher _purchaseDispatcher;
@@ -143,6 +144,12 @@ public class Root : BaseMonobehaviour
         {
             _soilPms.Add(CreateSoilPm(soil, id++));
         }
+
+        id = 0;
+        foreach (var juicer in _juicers)
+        {
+            _juicerPms.Add(CreateJuicerPm(juicer, id++));
+        }
     }
 
     private SoilPm CreateSoilPm(SoilView view, int id)
@@ -156,11 +163,26 @@ public class Root : BaseMonobehaviour
         });
     }
 
+    private JuicerPm CreateJuicerPm(JuicerView view, int id)
+    {
+        return new JuicerPm(new JuicerPm.Ctx
+        {
+            view = view,            
+            id = id,
+            inventory = _inventory,
+            itemDataFactory = _itemDataFactory
+        });
+    }
+
     protected override void OnDestroy()
     {
         foreach (var soilPm in _soilPms)
         {
             soilPm.Dispose();
+        }
+        foreach (var juicePm in _juicerPms)
+        {
+            juicePm.Dispose();
         }
         _resourceLoader?.Dispose();
         _character?.Dispose();

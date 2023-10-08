@@ -1,18 +1,30 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using Core;
+using System;
+using Data;
+using Game.Selectables;
 
-public class JuicerView : MonoBehaviour
+public class JuicerView : BaseMonobehaviour, ISelectable
 {
-    // Start is called before the first frame update
-    void Start()
+    public struct Ctx
     {
-        
+        public Action<Item> onSelect;
+        public Func<SelectableStatus> getStatus;
     }
 
-    // Update is called once per frame
-    void Update()
+    private Ctx _cxt;
+
+    public void Init(Ctx ctx)
     {
-        
+        _cxt = ctx;
+    }
+
+    public void Activate(Item item)
+    {
+        _cxt.onSelect?.Invoke(item);
+    }
+
+    public SelectableStatus GetSelectState()
+    {
+        return _cxt.getStatus?.Invoke();
     }
 }
