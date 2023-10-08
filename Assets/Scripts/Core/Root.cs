@@ -6,6 +6,8 @@ using Game.Player;
 using Game.Selectables;
 using Tools;
 using Game.Factories;
+using Game.Purchasing;
+using Tools.Extensions;
 using UI;
 using UniRx;
 using Unity.VisualScripting;
@@ -18,6 +20,7 @@ public class Root : BaseMonobehaviour
     [SerializeField] private List<SoilView> _soils;    
     [SerializeField] private PlantCatalog _plantCatalog;
     [SerializeField] private Canvas _mainCanvas;
+    [SerializeField] private StartSettings _startSettings;
     private IResourceLoader _resourceLoader;
     private CharacterPm _character;
     private Inventory _inventory;
@@ -26,13 +29,15 @@ public class Root : BaseMonobehaviour
     private List<SoilPm> _soilPms = new List<SoilPm>();
     private PlantFactoryPm _plantFactoryPm;
     private FactoryView factoryView;
+    private PurchaseDispatcher _purchaseDispatcher;
+    private ReactiveEvent<Purchase> _purchaseEvent;
 
     private const string PlantFactoryName = "PlantFactory";
-
-    private ReactiveCollection<SeedlingData> _seedlings;
     
     private void Awake()
     {
+        _purchaseEvent = new ReactiveEvent<Purchase>();
+
         _resourceLoader = new ResourcePreLoader(new ResourcePreLoader.Ctx
         {
             maxLoadDelay = 0f,
@@ -43,7 +48,8 @@ public class Root : BaseMonobehaviour
         {
             resourceLoader = _resourceLoader,
             startPosition = _startPositon.position,
-            camera = _camera
+            camera = _camera,
+            startSpeed = _startSettings.CharacterSpeed
         };
         _character = new CharacterPm(characterCtx);
 
@@ -61,35 +67,44 @@ public class Root : BaseMonobehaviour
             _soilPms.Add(CreateSoilPm(soil, id++));
         }
 
-        _seedlings = new ReactiveCollection<SeedlingData>();
+        List<SeedlingData> seedlingDatas = new List<SeedlingData>();
+        foreach (var plantAsset in _startSettings.StartPlants)
+        {
+            seedlingDatas.Add(new SeedlingData
+            {
+                Plant = plantAsset
+            });
+        }
         
         Inventory.Ctx inventoryCtx = new Inventory.Ctx
         {
-            startSeedlings = _seedlings
+            startSeedlings = seedlingDatas
         };
         _inventory = new Inventory(inventoryCtx);
 
         Profile.Ctx profileCtx = new Profile.Ctx
         {
-            inventory = _inventory
+            inventory = _inventory,
+            moneys = _startSettings.StartMoneys
         };
         _profile = new Profile(profileCtx);
+
+        PurchaseDispatcher.Ctx purchaseDispatcherCtx = new PurchaseDispatcher.Ctx
+        {
+            inventory = _inventory,
+            profile = _profile,
+            purchaseEvent = _purchaseEvent
+        };
+        _purchaseDispatcher = new PurchaseDispatcher(purchaseDispatcherCtx);
 
         MainHUDPm.Ctx hudCtx = new MainHUDPm.Ctx
         {
             resourceLoader = _resourceLoader,
             mainCanvas = _mainCanvas,
-            profile = _profile
+            profile = _profile,
+            purchaseEvent = _purchaseEvent,
         };
         _hud = new MainHUDPm(hudCtx);
-
-        foreach (var plant in _plantCatalog.GetCatalog())
-        {
-            _seedlings.Add(new SeedlingData
-            {
-                Plant = plant
-            });
-        }
     }
 
     private SoilPm CreateSoilPm(SoilView view, int id)
@@ -108,12 +123,11 @@ public class Root : BaseMonobehaviour
         {
             soilPm.Dispose();
         }
-        _resourceLoader.Dispose();
-        _character.Dispose();
-        _seedlings.Dispose();
-        _inventory.Dispose();
-        _profile.Dispose();
-        _hud.Dispose();
+        _resourceLoader?.Dispose();
+        _character?.Dispose();
+        _inventory?.Dispose();
+        _profile?.Dispose();
+        _hud?.Dispose();
         base.OnDestroy();
     }
 }

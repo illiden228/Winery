@@ -628,6 +628,7 @@ MonoBehaviour:
   - {fileID: 1284195991}
   _plantCatalog: {fileID: 11400000, guid: 211ad6ffb7ba2234db3c8b68c6357bcc, type: 2}
   _mainCanvas: {fileID: 1586258713}
+  _startSettings: {fileID: 11400000, guid: 5dbb4d622d552f54fbbdf97c030099fa, type: 2}
 --- !u!4 &1522857222
 Transform:
   m_ObjectHideFlags: 0

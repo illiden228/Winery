@@ -1,6 +1,9 @@
 ﻿using Core;
 using Game.Player;
+using Game.Purchasing;
 using Tools;
+using Tools.Extensions;
+using UI.Store;
 using UniRx;
 using UnityEngine;
 
@@ -13,12 +16,14 @@ namespace UI
             public IResourceLoader resourceLoader;
             public Canvas mainCanvas;
             public IReadOnlyProfile profile;
+            public ReactiveEvent<Purchase> purchaseEvent;
         }
 
         private readonly Ctx _ctx;
         private const string VIEW_PREFAB_NAME = "MainHUD";
         private MainHUDView _view;
         private InventoryPm _inventory;
+        private StorePm _store;
         
         public MainHUDPm(Ctx ctx)
         {
@@ -29,17 +34,25 @@ namespace UI
         private void OnViewLoaded(GameObject viewPrefab)
         {
             _view = GameObject.Instantiate(viewPrefab, _ctx.mainCanvas.transform).GetComponent<MainHUDView>();
-            ReactiveProperty<bool> open = AddDispose(new ReactiveProperty<bool>(true));
+            ReactiveProperty<bool> inventoryOpen = AddDispose(new ReactiveProperty<bool>(true));
+            ReactiveProperty<bool> storeOpen = AddDispose(new ReactiveProperty<bool>(true));
             _view.Init(new MainHUDView.Ctx
             {
                 viewDisposables = AddDispose(new CompositeDisposable()),
                 inventoryButtonClick = () =>
                 {
                     if(_inventory != null)
-                        open.Value = true;
+                        inventoryOpen.Value = true;
                     else
-                        CreateInventory(open);
-                }
+                        CreateInventory(inventoryOpen);
+                },
+                storeButtonClick = () =>
+                {
+                    if(_store != null)
+                        storeOpen.Value = true;
+                    else
+                        CreateStore(storeOpen);
+                },
             });
         }
 
@@ -54,10 +67,24 @@ namespace UI
                 inventory = _ctx.profile.Inventory
             });
         }
+        
+        private void CreateStore(ReactiveProperty<bool> open)
+        {
+            _store = new StorePm(new StorePm.Ctx
+            {
+                mainCanvas = _ctx.mainCanvas,
+                resourceLoader = _ctx.resourceLoader,
+                open = open,
+                onCloseClick = () => open.Value = false,
+                inventory = _ctx.profile.Inventory,
+                purchaseEvent = _ctx.purchaseEvent
+            });
+        }
 
         protected override void OnDispose()
         {
-            _inventory.Dispose();
+            _inventory?.Dispose();
+            _store?.Dispose();
             base.OnDispose();
         }
     }

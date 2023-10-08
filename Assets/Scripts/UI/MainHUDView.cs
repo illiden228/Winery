@@ -12,9 +12,11 @@ namespace UI
         {
             public CompositeDisposable viewDisposables;
             public Action inventoryButtonClick; 
+            public Action storeButtonClick; 
         }
         
         [SerializeField] private Button _inventoryButton;
+        [SerializeField] private Button _storeButton;
 
         private Ctx _ctx;
 
@@ -23,6 +25,9 @@ namespace UI
             _ctx = ctx;
             _inventoryButton.OnClickAsObservable()
                 .Subscribe(_ => _ctx.inventoryButtonClick?.Invoke())
+                .AddTo(_ctx.viewDisposables);
+            _storeButton.OnClickAsObservable()
+                .Subscribe(_ => _ctx.storeButtonClick?.Invoke())
                 .AddTo(_ctx.viewDisposables);
         }
        

@@ -19,7 +19,7 @@ public class PlantCatalog : ScriptableObject
         {
             if (plantAssets[i] != null && string.IsNullOrEmpty(plantAssets[i].Id))
             {
-                Debug.LogWarning("Пустой ID в каталоге растений!");
+                Debug.LogWarning("РџСѓСЃС‚РѕР№ ID РІ РєР°С‚Р°Р»РѕРіРµ СЂР°СЃС‚РµРЅРёР№!");
                 return false;
             }
         }
@@ -33,7 +33,7 @@ public class PlantCatalog : ScriptableObject
 
         foreach (var id in duplicateIds)
         {
-            Debug.LogWarning($"Дубликаты id: {id}!");
+            Debug.LogWarning($"Р”СѓР±Р»РёРєР°С‚С‹ id: {id}!");
             valid = false;
         }
 

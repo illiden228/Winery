@@ -1,9 +1,9 @@
 ﻿using Core;
+using Data;
 using Game.Selectables;
 using Tools;
 using UniRx;
 using UnityEngine;
-using UnityEngine.UIElements.Experimental;
 
 namespace Game.Character
 {
@@ -14,6 +14,7 @@ namespace Game.Character
             public IResourceLoader resourceLoader;
             public Vector3 startPosition;
             public Camera camera;
+            public float startSpeed;
         }
 
         private readonly Ctx _ctx;
@@ -36,7 +37,7 @@ namespace Game.Character
             ReactiveProperty<Vector3> newPosition = AddDispose(new ReactiveProperty<Vector3>());
             CharacterModel characterModel = new CharacterModel
             {
-                Speed = new ReactiveProperty<float>(3f)
+                Speed = new ReactiveProperty<float>(_ctx.startSpeed)
             };
             CharacterMovePm.Ctx characterMoveCtx = new CharacterMovePm.Ctx
             {
