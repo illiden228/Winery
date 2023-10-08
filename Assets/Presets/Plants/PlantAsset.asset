@@ -19,7 +19,7 @@ MonoBehaviour:
   _growTime: 10
   _fruitRipeTime: 4
   _sproutStages: 4
-  _ripeStages: 4
+  _ripeStages: 2
   _view: {fileID: 7476381845414570974, guid: 90ce1a01927a18d42a3d6f7dcae3d9cf, type: 3}
   _cost: 0
   _maxStackCount: 0

@@ -1,9 +1,7 @@
 using Core;
 using System;
-using System.Diagnostics;
 using Data;
 using Tools.Extensions;
-using UnityEngine;
 
 public class PlantPm : BaseDisposable, IGrowable
 {
@@ -25,21 +23,23 @@ public class PlantPm : BaseDisposable, IGrowable
     private int _currentStep;
     private IDisposable _updateGrowthDisposable;
     private PlantStages _currentPlantStage;
-    public bool Grown => _currentStep == _ctx.seedling.Plant.SproutStageCount;
-    public bool Ripened => _currentStep == _ctx.seedling.Plant.RipeStageCount;
+    public bool Grown => _currentStep == _ctx.seedling.SproutStageCount;
+    public bool Ripened => _currentStep == _ctx.seedling.RipeStageCount;
 
     public PlantPm(Ctx ctx)
     {
         _ctx = ctx;
-        _ctx.plantView.Init(new PlantView.Ctx { growthTime = _ctx.seedling.Plant.GrowthTime, fruitRipeTime = _ctx.seedling.Plant.FruitRipeTime });
+        _ctx.plantView.Init(new PlantView.Ctx { growthTime = _ctx.seedling.GrowthTime, fruitRipeTime = _ctx.seedling.FruitRipeTime });
         _currentPlantStage = PlantStages.Growing;
         _currentStep = 1;
         ctx.plantView.UpdatePlantView(_currentStep);
-        _updateGrowthDisposable = ReactiveExtensions.RepeatableDelayedCall(_ctx.seedling.Plant.GrowthTime / _ctx.seedling.Plant.SproutStageCount, UpdateGrowth);
+        _updateGrowthDisposable = ReactiveExtensions.RepeatableDelayedCall(_ctx.seedling.GrowthTime / _ctx.seedling.SproutStageCount, UpdateGrowth);
     }
 
     public void UpdateGrowth()
     {
+        //To do: rewrite to state machine
+
         switch (_currentPlantStage)
         {
             case PlantStages.Growing:
@@ -49,13 +49,13 @@ public class PlantPm : BaseDisposable, IGrowable
 
                     if (Grown)
                     {
-                        _currentStep = 1;
+                        _currentStep = 0;
                         _currentPlantStage = PlantStages.FruitsRipening;
 
                         if (_updateGrowthDisposable != null)
                             _updateGrowthDisposable.Dispose();
 
-                        _updateGrowthDisposable = ReactiveExtensions.RepeatableDelayedCall(_ctx.seedling.Plant.FruitRipeTime / _ctx.seedling.Plant.RipeStageCount, UpdateGrowth);
+                        _updateGrowthDisposable = ReactiveExtensions.RepeatableDelayedCall(_ctx.seedling.FruitRipeTime / _ctx.seedling.RipeStageCount, UpdateGrowth);
                     }
 
                     break;
@@ -67,7 +67,7 @@ public class PlantPm : BaseDisposable, IGrowable
             case PlantStages.FruitsRipening:
                 {
                     _currentStep++;
-                    _ctx.plantView.UpdatePlantView(_currentStep, Ripened);
+                    _ctx.plantView.UpdatePlantView(_currentStep, Ripened);                    
 
                     if (Ripened)
                     {
@@ -84,20 +84,23 @@ public class PlantPm : BaseDisposable, IGrowable
                     _currentStep = 1;
                     _currentPlantStage = PlantStages.FruitsRipening;
 
-                    _updateGrowthDisposable = ReactiveExtensions.RepeatableDelayedCall(_ctx.seedling.Plant.FruitRipeTime / _ctx.seedling.Plant.RipeStageCount, UpdateGrowth);
+                    _updateGrowthDisposable = ReactiveExtensions.RepeatableDelayedCall(_ctx.seedling.FruitRipeTime / _ctx.seedling.RipeStageCount, UpdateGrowth);
                     break;
                 }
         }
     }
 
-    public void PickUpFruits(Action callBack)
+    public void PickUpFruits(Action<SeedlingData> callBack)
     {
         if (_currentPlantStage != PlantStages.FruitsRipened)
             return;
 
         UpdateGrowth();
 
-        callBack?.Invoke();
+        //to do: change to GrapeData
+        SeedlingData grapeData = new SeedlingData { Count = 1, Id = _ctx.seedling.Id, MaxCount = _ctx.seedling.MaxCount, Name = "Grape", Plant = _ctx.seedling.Plant };
+
+        callBack?.Invoke(grapeData);
     }
 
     protected override void OnDispose()

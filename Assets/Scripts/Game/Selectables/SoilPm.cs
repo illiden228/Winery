@@ -54,14 +54,14 @@ namespace Game.Selectables
             {
                 _currentPm = (_ctx.plantFactory.GetPlantPmCtxById(seedling, _ctx.view.transform));
 
-                Debug.Log($"Выбрана грядка {_ctx.id} и посажен росток IsabellaGrape!");
+                Debug.Log($"Выбрана грядка {_ctx.id} и посажен росток {seedling.Name}!");
             }
             else
             {
                 if (_currentPm.Ripened)
-                    _currentPm.PickUpFruits(() =>
+                    _currentPm.PickUpFruits((seedlingData) =>
                     {
-                        //_ctx.inventory.AddItemToInventory();
+                        _ctx.inventory.AddItemToInventory(seedlingData);
                     });
             }
         }

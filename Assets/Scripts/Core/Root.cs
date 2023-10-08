@@ -74,15 +74,25 @@ public class Root : BaseMonobehaviour
                 Icon = asset.Icon,
                 Id = asset.Id,
                 Name = asset.Name,
-                MaxCount = asset.MaxStackCount
+                MaxCount = asset.MaxStackCount,
+                FruitRipeTime = asset.FruitRipeTime,
+                GrowthTime = asset.GrowthTime,
+                RipeStageCount = asset.RipeStageCount,
+                SproutStageCount = asset.SproutStageCount
             });
-        }
-        
+        }        
+
         Inventory.Ctx inventoryCtx = new Inventory.Ctx
         {
             startSeedlings = seedlingDatas
         };
         _inventory = new Inventory(inventoryCtx);
+
+        int id = 0;
+        foreach (var soil in _soils)
+        {
+            _soilPms.Add(CreateSoilPm(soil, id++));
+        }
 
         Profile.Ctx profileCtx = new Profile.Ctx
         {
@@ -121,14 +131,16 @@ public class Root : BaseMonobehaviour
             stock = stock
         };
         _hud = new MainHUDPm(hudCtx);
-SelectorPm.Ctx selectorCtx = new SelectorPm.Ctx
+        
+        SelectorPm.Ctx selectorCtx = new SelectorPm.Ctx
         {
             inventory = _inventory,
             mainCanvas = _mainCanvas,
             resourceLoader = _resourceLoader,
             selectorEvent = _selectorEvent
         };
-        _selector = new SelectorPm(selectorCtx);    }
+        _selector = new SelectorPm(selectorCtx);
+    }
 
     private SoilPm CreateSoilPm(SoilView view, int id)
     {
@@ -136,8 +148,7 @@ SelectorPm.Ctx selectorCtx = new SelectorPm.Ctx
         {
             view = view,
             plantFactory = _plantFactoryPm,
-            id = id,
-            inventory = _inventory
+            id = id
         });
     }
 

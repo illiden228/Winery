@@ -31,6 +31,8 @@ public class PlantView : BaseMonobehaviour
 
         for (int i = 0; i < _growthSproutStages.Length; i++)
             _growthSproutStages[i].SetActive(false);
+        for (int i = 0; i < _fruitRipeStages.Length; i++)
+            _fruitRipeStages[i].SetActive(false);
 
         _currentPlantViewStage = PlantViewStage.Sprout;
     }
@@ -46,6 +48,8 @@ public class PlantView : BaseMonobehaviour
                     if (stageFinished)
                     {
                         Debug.Log("Росток вырос!");
+
+                        _currentPlantViewStage = PlantViewStage.Fruitful;
 
                         if (_grownEffect)
                             _grownEffect.Play();
