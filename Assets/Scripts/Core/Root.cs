@@ -14,6 +14,7 @@ using UI.Select;
 using UniRx;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Root : BaseMonobehaviour
 {
@@ -23,6 +24,7 @@ public class Root : BaseMonobehaviour
     [SerializeField] private PlantCatalog _plantCatalog;
     [SerializeField] private Canvas _mainCanvas;
     [SerializeField] private StartSettings _startSettings;
+    [SerializeField] private EventSystem _eventSystem;
     private IResourceLoader _resourceLoader;
     private CharacterPm _character;
     private Inventory _inventory;
@@ -52,7 +54,8 @@ public class Root : BaseMonobehaviour
             startPosition = _startPosition.position,
             camera = _camera,
             startSpeed = _startSettings.CharacterSpeed,
-            selectorEvent = _selectorEvent
+            selectorEvent = _selectorEvent,
+            eventSystem = _eventSystem
         };
         _character = new CharacterPm(characterCtx);
 

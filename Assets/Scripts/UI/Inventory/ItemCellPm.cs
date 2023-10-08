@@ -46,5 +46,11 @@ namespace UI
                 onItemClick = _ctx.onClick
             });
         }
+
+        protected override void OnDispose()
+        {
+            GameObject.Destroy(_view.gameObject);
+            base.OnDispose();
+        }
     }
 }

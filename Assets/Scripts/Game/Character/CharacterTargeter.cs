@@ -3,6 +3,7 @@ using Game.Selectables;
 using Tools.Extensions;
 using UniRx;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Game.Character
 {
@@ -13,6 +14,7 @@ namespace Game.Character
             public ReactiveProperty<ISelectable> selectable;
             public ReactiveProperty<Vector3> targetPosition;
             public Camera camera;
+            public EventSystem eventSystem;
         }
 
         private readonly Ctx _ctx;
@@ -27,6 +29,8 @@ namespace Game.Character
         {
             if (Input.GetMouseButtonDown(0))
             {
+                if(_ctx.eventSystem.IsPointerOverGameObject())
+                    return;
                 Ray ray = _ctx.camera.ScreenPointToRay(Input.mousePosition);
                 RaycastGround(ray);
                 RaycastSelectables(ray);

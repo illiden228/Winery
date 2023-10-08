@@ -94,5 +94,11 @@ namespace UI.Select
             
             _itemCells.Clear();
         }
+        
+        protected override void OnDispose()
+        {
+            GameObject.Destroy(_view.gameObject);
+            base.OnDispose();
+        }
     }
 }

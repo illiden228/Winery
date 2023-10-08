@@ -39,8 +39,7 @@ namespace Game.Character
                 {
                     ReactiveProperty<Item> item = new ReactiveProperty<Item>();
                     
-                    if(_selectWaiting != null)
-                        _selectWaiting.Dispose();
+                    _selectWaiting?.Dispose();
 
                     _selectWaiting = item.SkipLatestValueOnSubscribe().Subscribe(item =>
                     {
@@ -54,8 +53,15 @@ namespace Game.Character
                         Item = item,
                         Open = true
                     });
-                    
-                    
+                }
+                else
+                {
+                    _selectWaiting?.Dispose();
+                    _ctx.selectable.Value = null;
+                    _ctx.selectorEvent.Notify(new SelectorInfo
+                    {
+                        Open = false
+                    });
                 }
             }));
             

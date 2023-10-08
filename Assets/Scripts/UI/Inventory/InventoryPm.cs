@@ -59,5 +59,11 @@ namespace UI
             };
             return new ItemCellPm(itemCellCtx);
         }
+
+        protected override void OnDispose()
+        {
+            GameObject.Destroy(_view.gameObject);
+            base.OnDispose();
+        }
     }
 }
