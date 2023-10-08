@@ -1,15 +1,13 @@
 using Core;
-using NaughtyAttributes;
 using System;
-using Game.Character;
+using Data;
 using Game.Selectables;
-using UnityEngine;
 
 public class SoilView : BaseMonobehaviour, ISelectable
 {
     public struct Ctx
     {
-        public Action onSelect;
+        public Action<Item> onSelect;
     }
 
     private Ctx _cxt;
@@ -18,9 +16,9 @@ public class SoilView : BaseMonobehaviour, ISelectable
     {
         _cxt = ctx;
     }
-    
-    public void Select()
+
+    public void Select(Item item)
     {
-        _cxt.onSelect?.Invoke();
-    }    
+        _cxt.onSelect?.Invoke(item);
+    }
 }

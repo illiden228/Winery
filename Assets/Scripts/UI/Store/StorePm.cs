@@ -19,7 +19,7 @@ namespace UI.Store
             public Canvas mainCanvas;
             public IReadOnlyReactiveProperty<bool> open;
             public Action onCloseClick;
-            public IInventory inventory;
+            public ReactiveCollection<Item> stock;
             public ReactiveEvent<Purchase> purchaseEvent;
         }
 
@@ -47,26 +47,26 @@ namespace UI.Store
                 onCloseClick = _ctx.onCloseClick
             });
             
-            foreach (var seedling in _ctx.inventory.Seedlings)
+            foreach (var seedling in _ctx.stock)
             {
                 _itemCells.Add(CreateCell(seedling));
             }
         }
         
-        private ItemCellPm CreateCell(SeedlingData seedling)
+        private ItemCellPm CreateCell(Item item)
         {
             ItemCellPm.Ctx itemCellCtx = new ItemCellPm.Ctx
             {
                 resourceLoader = _ctx.resourceLoader,
                 container = _view.Container,
-                plantData = seedling,
+                item = item,
                 onClick = () =>
                 {
                     _ctx.purchaseEvent.Notify(new Purchase
                     {
-                        SeedlingData = new SeedlingData
+                        Item = new SeedlingData
                         {
-                            Plant = seedling.Plant
+                            Plant = (item as SeedlingData)?.Plant
                         },
                     });
                 }

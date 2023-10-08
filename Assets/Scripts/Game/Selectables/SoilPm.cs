@@ -1,4 +1,5 @@
 ﻿using Core;
+using Data;
 using UnityEngine;
 using Game.Factories;
 using Game.Player;
@@ -41,11 +42,18 @@ namespace Game.Selectables
             });
         }
 
-        private void OnSelect()
+        private void OnSelect(Item item)
         {
+            SeedlingData seedling;
+            if(item is SeedlingData)
+                seedling = item as SeedlingData;
+            else
+                return;
+
             if (_currentPm == null)
             {
-                _currentPm = (_ctx.plantFactory.GetPlantPmCtxById("IsabellaGrape", _ctx.view.transform));
+                _currentPm = (_ctx.plantFactory.GetPlantPmCtxById(seedling, _ctx.view.transform));
+
                 Debug.Log($"Выбрана грядка {_ctx.id} и посажен росток IsabellaGrape!");
             }
             else

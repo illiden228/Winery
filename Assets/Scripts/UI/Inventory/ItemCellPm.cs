@@ -13,7 +13,7 @@ namespace UI
         {
             public IResourceLoader resourceLoader;
             public Transform container;
-            public SeedlingData plantData;
+            public Item item;
             public Action onClick;
         }
 
@@ -30,11 +30,19 @@ namespace UI
         private void OnViewLoaded(GameObject viewPrefab)
         {
             _view = GameObject.Instantiate(viewPrefab, _ctx.container).GetComponent<ItemCellView>();
+
+            ReactiveProperty<int> count = new ReactiveProperty<int>();
+            AddDispose(_ctx.item.ObserveEveryValueChanged(x => x.Count).Subscribe(_ =>
+            {
+                count.Value = _ctx.item.Count;
+            }));
+            
             _view.Init(new ItemCellView.Ctx
             {
                 viewDisposables = AddDispose(new CompositeDisposable()),
-                background = _ctx.plantData.Plant.Icon,
-                name = _ctx.plantData.Plant.Name,
+                background = _ctx.item.Icon,
+                name = _ctx.item.Name,
+                count = count,
                 onItemClick = _ctx.onClick
             });
         }

@@ -26,7 +26,7 @@ namespace Game.Purchasing
 
         private void OnPurchase(Purchase purchase)
         {
-            SeedlingData seedlingData = purchase.SeedlingData;
+            SeedlingData seedlingData = purchase.Item as SeedlingData;
             if(_ctx.profile.TryRemoveMoney(seedlingData.Plant.Cost))
             {
                 purchase.Callback?.Invoke();

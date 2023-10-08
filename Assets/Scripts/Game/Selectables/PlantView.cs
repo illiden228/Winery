@@ -1,5 +1,5 @@
 using Core;
-using FarmingEngine;
+
 using System;
 using UnityEngine;
 
@@ -45,7 +45,7 @@ public class PlantView : BaseMonobehaviour
 
                     if (stageFinished)
                     {
-                        Debug.Log("Росток вырос!");
+                        Debug.Log("Р РѕСЃС‚РѕРє РІС‹СЂРѕСЃ!");
 
                         if (_grownEffect)
                             _grownEffect.Play();
@@ -58,7 +58,7 @@ public class PlantView : BaseMonobehaviour
 
                     if (stageFinished)
                     {
-                        Debug.Log("Плоды созрели!");
+                        Debug.Log("РџР»РѕРґС‹ СЃРѕР·СЂРµР»Рё!");
 
                         if (_fruitRipened)
                             _fruitRipened.Play();
@@ -72,7 +72,7 @@ public class PlantView : BaseMonobehaviour
     {
         if (models == null)
         {
-            Debug.LogWarning("Пустой список моделей роста/созревания!");
+            Debug.LogWarning("РџСѓСЃС‚РѕР№ СЃРїРёСЃРѕРє РјРѕРґРµР»РµР№ СЂРѕСЃС‚Р°/СЃРѕР·СЂРµРІР°РЅРёСЏ!");
             return;
         }
 

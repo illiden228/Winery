@@ -16,3 +16,5 @@ MonoBehaviour:
   _startMoneys: 100
   _startPlants:
   - {fileID: 11400000, guid: f02fc3237f6f3a840acb36db4879d290, type: 2}
+  _startStock:
+  - {fileID: 11400000, guid: f02fc3237f6f3a840acb36db4879d290, type: 2}

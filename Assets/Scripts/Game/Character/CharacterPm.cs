@@ -3,6 +3,7 @@ using Data;
 using Game.Selectables;
 using Tools;
 using Tools.Extensions;
+using UI.Select;
 using UniRx;
 using UnityEngine;
 
@@ -16,6 +17,7 @@ namespace Game.Character
             public Vector3 startPosition;
             public Camera camera;
             public float startSpeed;
+            public ReactiveEvent<SelectorInfo> selectorEvent;
         }
 
         private readonly Ctx _ctx;
@@ -70,7 +72,8 @@ namespace Game.Character
                 newPosition = newPosition,
                 targetPosition = _targetPosition,
                 model = characterModel,
-                animationEvent = animationEvent
+                animationEvent = animationEvent,
+                selectorEvent = _ctx.selectorEvent
             };
             AddDispose(new CharacterChangeState(changeStateCtx));
         }

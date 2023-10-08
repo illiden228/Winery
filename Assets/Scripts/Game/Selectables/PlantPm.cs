@@ -1,13 +1,16 @@
 using Core;
 using System;
+using System.Diagnostics;
+using Data;
 using Tools.Extensions;
+using UnityEngine;
 
 public class PlantPm : BaseDisposable, IGrowable
 {
     public struct Ctx
     {
         public PlantView plantView;
-        public PlantAsset asset;
+        public SeedlingData seedling;
     }
 
     public enum PlantStages
@@ -21,20 +24,18 @@ public class PlantPm : BaseDisposable, IGrowable
     private readonly Ctx _ctx;
     private int _currentStep;
     private IDisposable _updateGrowthDisposable;
-    public ReactiveEvent _waitForCollect;
     private PlantStages _currentPlantStage;
-
-    public bool Grown => _currentStep == _ctx.asset.SproutStageCount;    
-    public bool Ripened => _currentStep == _ctx.asset.RipeStageCount;
+    public bool Grown => _currentStep == _ctx.seedling.Plant.SproutStageCount;
+    public bool Ripened => _currentStep == _ctx.seedling.Plant.RipeStageCount;
 
     public PlantPm(Ctx ctx)
     {
         _ctx = ctx;
-        _ctx.plantView.Init(new PlantView.Ctx { growthTime = _ctx.asset.GrowthTime, fruitRipeTime = _ctx.asset.FruitRipeTime });
+        _ctx.plantView.Init(new PlantView.Ctx { growthTime = _ctx.seedling.Plant.GrowthTime, fruitRipeTime = _ctx.seedling.Plant.FruitRipeTime });
         _currentPlantStage = PlantStages.Growing;
         _currentStep = 1;
-        _ctx.plantView.UpdatePlantView(_currentStep);
-        _updateGrowthDisposable = ReactiveExtensions.RepeatableDelayedCall(_ctx.asset.GrowthTime / _ctx.asset.SproutStageCount, UpdateGrowth);
+        ctx.plantView.UpdatePlantView(_currentStep);
+        _updateGrowthDisposable = ReactiveExtensions.RepeatableDelayedCall(_ctx.seedling.Plant.GrowthTime / _ctx.seedling.Plant.SproutStageCount, UpdateGrowth);
     }
 
     public void UpdateGrowth()
@@ -54,7 +55,7 @@ public class PlantPm : BaseDisposable, IGrowable
                         if (_updateGrowthDisposable != null)
                             _updateGrowthDisposable.Dispose();
 
-                        _updateGrowthDisposable = ReactiveExtensions.RepeatableDelayedCall(_ctx.asset.FruitRipeTime / _ctx.asset.RipeStageCount, UpdateGrowth);
+                        _updateGrowthDisposable = ReactiveExtensions.RepeatableDelayedCall(_ctx.seedling.Plant.FruitRipeTime / _ctx.seedling.Plant.RipeStageCount, UpdateGrowth);
                     }
 
                     break;
@@ -81,9 +82,9 @@ public class PlantPm : BaseDisposable, IGrowable
             case PlantStages.FruitsRipened:
                 {
                     _currentStep = 1;
-                    _currentPlantStage = PlantStages.FruitsRipening;                                       
+                    _currentPlantStage = PlantStages.FruitsRipening;
 
-                    _updateGrowthDisposable = ReactiveExtensions.RepeatableDelayedCall(_ctx.asset.FruitRipeTime / _ctx.asset.RipeStageCount, UpdateGrowth);
+                    _updateGrowthDisposable = ReactiveExtensions.RepeatableDelayedCall(_ctx.seedling.Plant.FruitRipeTime / _ctx.seedling.Plant.RipeStageCount, UpdateGrowth);
                     break;
                 }
         }
@@ -109,3 +110,5 @@ public class PlantPm : BaseDisposable, IGrowable
         base.OnDispose();
     }
 }
+
+
