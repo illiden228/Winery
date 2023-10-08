@@ -13,7 +13,6 @@ public class PlantPm : BaseDisposable, IGrowable
     }
 
     private readonly Ctx _ctx;
-    private float _currentGrowthTime;
     private int _currentStage;
     private IDisposable _updateGrowthDisposable;
 
