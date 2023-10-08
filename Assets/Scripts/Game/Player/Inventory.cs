@@ -59,28 +59,28 @@ namespace Game.Player
             return null;
         }
 
-        public void AddItemToInventory(Item item)
+        public void AddItemToInventory(Item newItem)
         {
-            foreach (var seedling in _seedlings)
+            foreach (var item in _allItems)
             {
-                if (seedling.TryAdd(item.Id, item.Count))
+                if (item.TryAdd(newItem.Id, newItem.Count))
                 {
                     return;
                 }
             }
-            SwitchAndAddItem(item);
+            SwitchAndAddItem(newItem);
         }
         
-        public void RemoveFromInventory(Item item)
+        public void RemoveFromInventory(Item newItem)
         {
-            foreach (var seedling in _seedlings)
+            foreach (var item in _allItems)
             {
-                if (seedling.TryRemove(item.Id, item.Count))
+                if (item.TryRemove(newItem.Id, newItem.Count))
                 {
                     return;
                 }
             }
-            SwitchAndAddItem(item);
+            SwitchAndAddItem(newItem);
         }
 
         private void SwitchAndAddItem(Item item)
