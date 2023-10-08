@@ -55,12 +55,6 @@ public class Root : BaseMonobehaviour
             plantCatalog = _plantCatalog
         });
 
-        int id = 0;
-        foreach (var soil in _soils)
-        {
-            _soilPms.Add(CreateSoilPm(soil, id++));
-        }
-
         List<SeedlingData> seedlingDatas = new List<SeedlingData>();
         foreach (var plantAsset in _startSettings.StartPlants)
         {
@@ -99,6 +93,12 @@ public class Root : BaseMonobehaviour
             purchaseEvent = _purchaseEvent,
         };
         _hud = new MainHUDPm(hudCtx);
+
+        int id = 0;
+        foreach (var soil in _soils)
+        {
+            _soilPms.Add(CreateSoilPm(soil, id++));
+        }
     }
 
     private SoilPm CreateSoilPm(SoilView view, int id)
@@ -107,7 +107,8 @@ public class Root : BaseMonobehaviour
         {
             view = view,
             plantFactory = _plantFactoryPm,
-            id = id
+            id = id,
+            inventory = _inventory
         });
     }
 

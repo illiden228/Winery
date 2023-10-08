@@ -26,7 +26,7 @@ namespace Game.Player
         {
             _seedlings.Add(seedlingData);
         }
-
+        
         public void RemoveFromInventory(SeedlingData seedlingData)
         {
             _seedlings.Remove(seedlingData);

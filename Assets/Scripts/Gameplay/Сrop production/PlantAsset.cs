@@ -8,7 +8,9 @@ public class PlantAsset : ScriptableObject
     [SerializeField] private string _description;
     [SerializeField] private Sprite _icon;
     [SerializeField] private float _growTime;
-    [SerializeField] private int _stages = 4;
+    [SerializeField] private float _fruitRipeTime;
+    [SerializeField] private int _sproutStages = 4;
+    [SerializeField] private int _ripeStages = 2;
     [SerializeField] private PlantView _view;
     //[SerializeField] private GameObject[] _growthStagePrefabs;
     [SerializeField] private int _cost;
@@ -18,9 +20,11 @@ public class PlantAsset : ScriptableObject
     public string Description => _description;
     public Sprite Icon => _icon;
     public float GrowthTime => _growTime;
-	public int Cost => _cost;
+    public float FruitRipeTime => _fruitRipeTime;
+    public int Cost => _cost;
 	public PlantView View => _view;
-    public int StageCount => _stages;
+    public int SproutStageCount => _sproutStages;
+    public int RipeStageCount => _ripeStages;
 
     //public GameObject[] GetGrowthStagePrefabs()
     //{
