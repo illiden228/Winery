@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Core;
 using Data;
 using UniRx;
+using UnityEngine;
 
 namespace Game.Player
 {
@@ -10,41 +11,79 @@ namespace Game.Player
     {
         public struct Ctx
         {
-            public List<SeedlingData> startSeedlings;
+            public List<Item> startItems;
         }
 
         private readonly Ctx _ctx;
-        private ReactiveCollection<SeedlingData> _seedlings;
-        public IReadOnlyCollection<SeedlingData> Seedlings => _seedlings;
-
+        private ReactiveCollection<Item> _seedlings;
+        private ReactiveCollection<Item> _grapes;
+        private ReactiveCollection<Item> _allItems;
+        
+        public IReadOnlyCollection<Item> Seedlings => _seedlings;
+        public IReadOnlyCollection<Item> Grapes => _grapes;
+        public IReadOnlyCollection<Item> AllItems => _allItems;
+        public IReadOnlyCollection<Item> GetItemsWithType<T>() where T : Item => GetItemsWithType(typeof(T));
+        
         public Inventory(Ctx ctx)
         {
             _ctx = ctx;
-            _seedlings = new ReactiveCollection<SeedlingData>(_ctx.startSeedlings);
-        }
+            _seedlings = new ReactiveCollection<Item>();
+            _grapes = new ReactiveCollection<Item>();
+            _allItems = new ReactiveCollection<Item>();
 
-        public void AddItemToInventory(SeedlingData seedlingData)
-        {
-            foreach (var seedling in _seedlings)
+            foreach (var item in _ctx.startItems)
             {
-                if (seedling.TryAdd(seedlingData.Plant.Id, seedlingData.Count))
-                {
-                    return;
-                }
+                SwitchAndAddItem(item);
             }
-            _seedlings.Add(seedlingData);
         }
         
-        public void RemoveFromInventory(SeedlingData seedlingData)
+        public IReadOnlyCollection<Item> GetItemsWithType(Type type)
+        {
+            if (type.Equals(typeof(SeedlingData)))
+                return _seedlings;
+            if(type.Equals(typeof(GrapeData)))
+                return _grapes;
+
+            Debug.LogError($"Imposible find collection for type {type.Name}");
+            return null;
+        }
+
+        public void AddItemToInventory(Item item)
         {
             foreach (var seedling in _seedlings)
             {
-                if (seedling.TryRemove(seedlingData.Plant.Id, seedlingData.Count))
+                if (seedling.TryAdd(item.Id, item.Count))
                 {
                     return;
                 }
             }
-            _seedlings.Remove(seedlingData);
+            SwitchAndAddItem(item);
+        }
+        
+        public void RemoveFromInventory(Item item)
+        {
+            foreach (var seedling in _seedlings)
+            {
+                if (seedling.TryRemove(item.Id, item.Count))
+                {
+                    return;
+                }
+            }
+            SwitchAndAddItem(item);
+        }
+
+        private void SwitchAndAddItem(Item item)
+        {
+            _allItems.Add(item);
+            switch (item)
+            {
+                case SeedlingData:
+                    _seedlings.Add(item);
+                    break;
+                case GrapeData:
+                    _grapes.Add((GrapeData) item);
+                    break;
+            }
         }
     }
 }

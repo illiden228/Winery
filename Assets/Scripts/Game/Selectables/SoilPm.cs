@@ -50,7 +50,8 @@ namespace Game.Selectables
                 return new SelectableStatus
                 {
                     NeedSelector = true,
-                    AnimationTriggerName = CharacterAnimation.Triggers.Take
+                    AnimationTriggerName = CharacterAnimation.Triggers.Take,
+                    RequiredTypeForSelector = typeof(SeedlingData)
                 };
             if(_currentPm.Ripened)
                 return new SelectableStatus

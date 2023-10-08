@@ -9,5 +9,6 @@ namespace UI.Select
     {
         public bool Open;
         public ReactiveProperty<Item> Item;
+        public Type Type;
     }
 }

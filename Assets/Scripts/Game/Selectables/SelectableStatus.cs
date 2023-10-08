@@ -1,4 +1,5 @@
-﻿using Core;
+﻿using System;
+using Core;
 
 namespace Game.Selectables
 {
@@ -6,5 +7,6 @@ namespace Game.Selectables
     {
         public string AnimationTriggerName;
         public bool NeedSelector;
+        public Type RequiredTypeForSelector;
     }
 }

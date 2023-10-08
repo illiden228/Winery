@@ -62,12 +62,13 @@ namespace UI.Select
                 viewDisposables = AddDispose(new CompositeDisposable()),
                 open = _open
             });
-            
-            foreach (var seedling in _ctx.inventory.Seedlings)
+
+            var list = _ctx.inventory.GetItemsWithType(info.Type);
+            foreach (var item in list)
             {
-                _itemCells.Add(CreateCell(seedling, () =>
+                _itemCells.Add(CreateCell(item, () =>
                 {
-                    info.Item.Value = seedling;
+                    info.Item.Value = item;
                     _open.Value = false;
                 }));
             }

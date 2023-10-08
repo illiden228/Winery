@@ -73,7 +73,8 @@ namespace Game.Character
                     _ctx.selectorEvent.Notify(new SelectorInfo
                     {
                         Item = item,
-                        Open = true
+                        Open = true,
+                        Type = _currentStatus.Value.RequiredTypeForSelector
                     });
                 }
             }));

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using Core;
 using Data;
+using Factories;
 using Game.Character;
 using Game.Player;
 using Game.Selectables;
@@ -33,6 +34,7 @@ public class Root : BaseMonobehaviour
     private MainHUDPm _hud;
     private List<SoilPm> _soilPms = new List<SoilPm>();
     private PlantFactory _plantFactoryPm;
+    private ItemDataFactory _itemDataFactory;
     private PurchaseDispatcher _purchaseDispatcher;
     private ReactiveEvent<Purchase> _purchaseEvent;
     private ReactiveEvent<SelectorInfo> _selectorEvent;
@@ -42,46 +44,45 @@ public class Root : BaseMonobehaviour
         _purchaseEvent = new ReactiveEvent<Purchase>();
         _selectorEvent = new ReactiveEvent<SelectorInfo>();
         
-        List<SeedlingData> seedlingDatas = new List<SeedlingData>();
-        foreach (var asset in _startSettings.StartPlants)
+        _plantFactoryPm = new PlantFactory(new PlantFactory.Ctx
         {
-            seedlingDatas.Add(new SeedlingData
-            {
-                Plant = asset,
-                Count = 1,
-                Icon = asset.Icon,
-                Id = asset.Id,
-                Name = asset.Name,
-                MaxCount = asset.MaxStackCount,
-                FruitRipeTime = asset.FruitRipeTime,
-                GrowthTime = asset.GrowthTime,
-                RipeStageCount = asset.RipeStageCount,
-                SproutStageCount = asset.SproutStageCount
-            });
-        }   
+            plantCatalog = _plantCatalog
+        });
 
+        _itemDataFactory = new ItemDataFactory(new ItemDataFactory.Ctx
+        {
+            plantCatalog = _plantCatalog
+        });
+        
         _resourceLoader = new ResourcePreLoader(new ResourcePreLoader.Ctx
         {
             maxLoadDelay = 0f,
             minLoadDelay = 0f
         });
         
-        _plantFactoryPm = new PlantFactory(new PlantFactory.Ctx
-        {
-            plantCatalog = _plantCatalog
-        });
-        
-        Inventory.Ctx inventoryCtx = new Inventory.Ctx
-        {
-            startSeedlings = seedlingDatas
-        };
-        _inventory = new Inventory(inventoryCtx);
-
         int id = 0;
         foreach (var soil in _soils)
         {
             _soilPms.Add(CreateSoilPm(soil, id++));
         }
+        
+        List<Item> startInventory = new List<Item>();
+        foreach (var asset in _startSettings.StartPlants)
+        {
+            startInventory.Add(_itemDataFactory.CreateObject(asset, 1));
+        }
+        
+        ReactiveCollection<Item> stock = new ReactiveCollection<Item>();
+        foreach (var asset in _startSettings.StartStock)
+        {
+            stock.Add(_itemDataFactory.CreateObject(asset, 1));
+        }
+        
+        Inventory.Ctx inventoryCtx = new Inventory.Ctx
+        {
+            startItems = startInventory
+        };
+        _inventory = new Inventory(inventoryCtx);
 
         Profile.Ctx profileCtx = new Profile.Ctx
         {
@@ -108,20 +109,7 @@ public class Root : BaseMonobehaviour
             purchaseEvent = _purchaseEvent
         };
         _purchaseDispatcher = new PurchaseDispatcher(purchaseDispatcherCtx);
-
-        ReactiveCollection<Item> stock = new ReactiveCollection<Item>();
-        foreach (var asset in _startSettings.StartStock)
-        {
-            stock.Add(new SeedlingData
-            {
-                Plant = asset,
-                Count = 1,
-                Icon = asset.Icon,
-                Id = asset.Id,
-                Name = asset.Name,
-                MaxCount = asset.MaxStackCount
-            });
-        }
+        
         MainHUDPm.Ctx hudCtx = new MainHUDPm.Ctx
         {
             resourceLoader = _resourceLoader,
@@ -166,6 +154,7 @@ public class Root : BaseMonobehaviour
         _hud?.Dispose();
         _selector?.Dispose();
         _plantFactoryPm?.Dispose();
+        _itemDataFactory?.Dispose();
         base.OnDestroy();
     }
 }
