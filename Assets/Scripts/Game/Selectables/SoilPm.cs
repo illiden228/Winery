@@ -46,7 +46,6 @@ namespace Game.Selectables
 
         private SelectableStatus OnGetSelectStatus()
         {
-            Debug.Log(_currentPm?.Ripened);
             if (_currentPm == null)
                 return new SelectableStatus
                 {
@@ -60,7 +59,6 @@ namespace Game.Selectables
                     AnimationTriggerName = CharacterAnimation.Triggers.Collect
                 };
 
-            Debug.Log("NULL");
             return null;
         }
 
