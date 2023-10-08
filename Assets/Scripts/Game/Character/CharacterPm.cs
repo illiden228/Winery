@@ -6,6 +6,7 @@ using Tools.Extensions;
 using UI.Select;
 using UniRx;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Game.Character
 {
@@ -18,6 +19,7 @@ namespace Game.Character
             public Camera camera;
             public float startSpeed;
             public ReactiveEvent<SelectorInfo> selectorEvent;
+            public EventSystem eventSystem;
         }
 
         private readonly Ctx _ctx;
@@ -63,6 +65,7 @@ namespace Game.Character
                 targetPosition = newPosition,
                 selectable = selectable,
                 camera = _ctx.camera,
+                eventSystem = _ctx.eventSystem
             };
             AddDispose(new CharacterTargeter(targeterCtx));
 
