@@ -622,7 +622,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ed960de2f252ee47990f815ab6c0a8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _startPositon: {fileID: 1574505816}
+  _startPosition: {fileID: 1574505816}
   _camera: {fileID: 963194227}
   _soils:
   - {fileID: 1284195991}

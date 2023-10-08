@@ -17,8 +17,4 @@ MonoBehaviour:
   _description: Isabella Grape
   _icon: {fileID: 0}
   _growTime: 10
-  _growthStagePrefabs:
-  - {fileID: 146273680252437893, guid: 1aed4c9a8e68896419fc3d1703e2a9c8, type: 3}
-  - {fileID: 9144703472626587066, guid: 48ff54f621ec97b499f76e69d152b318, type: 3}
-  - {fileID: 6139545297951227449, guid: 13f2384d250b8484abb9a68d8e483b38, type: 3}
-  - {fileID: 6658078239271677224, guid: a7b09c841748fcb48883936e29c323fd, type: 3}
+  _view: {fileID: 7476381845414570974, guid: 90ce1a01927a18d42a3d6f7dcae3d9cf, type: 3}

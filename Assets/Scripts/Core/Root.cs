@@ -8,17 +8,14 @@ using UnityEngine;
 
 public class Root : BaseMonobehaviour
 {
-    [SerializeField] private Transform _startPositon;
+    [SerializeField] private Transform _startPosition;
     [SerializeField] private Camera _camera;
     [SerializeField] private List<SoilView> _soils;    
     [SerializeField] private PlantCatalog _plantCatalog;
     private IResourceLoader _resourceLoader;
     private CharacterPm _character;
     private List<SoilPm> _soilPms = new List<SoilPm>();
-    private PlantFactoryPm _plantFactoryPm;
-    private FactoryView factoryView;
-
-    private const string PlantFactoryName = "PlantFactory";
+    private PlantFactory _plantFactoryPm;
 
     private void Awake()
     {
@@ -31,17 +28,14 @@ public class Root : BaseMonobehaviour
         CharacterPm.Ctx characterCtx = new CharacterPm.Ctx
         {
             resourceLoader = _resourceLoader,
-            startPosition = _startPositon.position,
+            startPosition = _startPosition.position,
             camera = _camera
         };
         _character = new CharacterPm(characterCtx);
 
-        factoryView = new GameObject(PlantFactoryName).AddComponent<FactoryView>();
-
-        _plantFactoryPm = new PlantFactoryPm(new PlantFactoryPm.Ctx
+        _plantFactoryPm = new PlantFactory(new PlantFactory.Ctx
         {
-            plantCatalog = _plantCatalog,
-            factoryView = factoryView
+            plantCatalog = _plantCatalog
         });
 
         int id = 0;
@@ -56,8 +50,8 @@ public class Root : BaseMonobehaviour
         return new SoilPm(new SoilPm.Ctx
         {
             view = view,
-            plantFactory= _plantFactoryPm,
-            id = id            
+            plantFactory = _plantFactoryPm,
+            id = id
         });
     }
 
@@ -69,6 +63,7 @@ public class Root : BaseMonobehaviour
         }
         _resourceLoader.Dispose();
         _character.Dispose();
+        _plantFactoryPm.Dispose();
         base.OnDestroy();
     }
 }
