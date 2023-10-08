@@ -75,7 +75,7 @@ namespace Game.Selectables
                 else
                     return;
                 _currentPm = (_ctx.plantFactory.GetPlantPmCtxById(seedling, _ctx.view.transform));
-
+                _ctx.inventory.RemoveFromInventory(item);
                 Debug.Log($"Выбрана грядка {_ctx.id} и посажен росток {seedling.Name}!");
             }
             else

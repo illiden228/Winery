@@ -80,7 +80,7 @@ namespace Game.Player
                     return;
                 }
             }
-            SwitchAndAddItem(newItem);
+            SwitchAndRemoveItem(newItem);
         }
 
         private void SwitchAndAddItem(Item item)
@@ -99,6 +99,26 @@ namespace Game.Player
                     break;
                 case WineData:
                     _wine.Add((WineData)item);
+                    break;
+            }
+        }
+        
+        private void SwitchAndRemoveItem(Item item)
+        {
+            _allItems.Remove(item);
+            switch (item)
+            {
+                case SeedlingData:
+                    _seedlings.Remove(item);
+                    break;
+                case GrapeData:
+                    _grapes.Remove((GrapeData) item);
+                    break;
+                case JuiceData:
+                    _juice.Remove((JuiceData)item);
+                    break;
+                case WineData:
+                    _wine.Remove((WineData)item);
                     break;
             }
         }
