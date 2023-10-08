@@ -1,8 +1,6 @@
 using Core;
 using System;
-using System.Diagnostics;
 using Tools.Extensions;
-using UnityEngine;
 
 public class PlantPm : BaseDisposable, IGrowable
 {
@@ -11,10 +9,19 @@ public class PlantPm : BaseDisposable, IGrowable
         public PlantView plantView;
         public PlantAsset asset;
     }
+    
+    public enum PlantStages
+    {
+        Growing,
+        WaitingWater,
+        FruitsRipening,
+        FruitsRipened
+    }
 
     private readonly Ctx _ctx;
     private int _currentStage;
     private IDisposable _updateGrowthDisposable;
+    private PlantStages _currentPlantStage;
 
     public bool Grown => _currentStage == _ctx.asset.StageCount;
 
@@ -22,9 +29,10 @@ public class PlantPm : BaseDisposable, IGrowable
     {
         _ctx = ctx;
         _ctx.plantView.Init(new PlantView.Ctx { growthTime = _ctx.asset.GrowthTime });
+        _currentPlantStage = PlantStages.Growing;
         _currentStage = 1;
         _ctx.plantView.UpdatePlantView(_currentStage);
-        _updateGrowthDisposable = ReactiveExtensions.DelayedCall(_ctx.asset.GrowthTime / _ctx.asset.StageCount, UpdateGrowth);
+        _updateGrowthDisposable = ReactiveExtensions.RepeatableDelayedCall(_ctx.asset.GrowthTime / _ctx.asset.StageCount, UpdateGrowth);
     }
 
     public void UpdateGrowth()
@@ -38,8 +46,7 @@ public class PlantPm : BaseDisposable, IGrowable
         }
 
         _currentStage++;
-        _ctx.plantView.UpdatePlantView(_currentStage, Grown);
-        _updateGrowthDisposable = ReactiveExtensions.DelayedCall(_ctx.asset.GrowthTime / _ctx.asset.StageCount, UpdateGrowth);
+        _ctx.plantView.UpdatePlantView(_currentStage, Grown);        
     }
 
     protected override void OnDispose()
