@@ -24,7 +24,7 @@ namespace Game.Character
         public CharacterPm(Ctx ctx)
         {
             _ctx = ctx;
-            _targetPosition = new ReactiveProperty<Vector3>();
+            _targetPosition = AddDispose(new ReactiveProperty<Vector3>());
             _ctx.resourceLoader.LoadPrefab("fake", CHARACTER_VIEW_PREFAB_NAME, OnViewLoaded);
         }
 
@@ -32,8 +32,8 @@ namespace Game.Character
         {
             _view = GameObject.Instantiate(view, _ctx.startPosition, Quaternion.identity).GetComponent<CharacterView>();
 
-            ReactiveProperty<ISelectable> selectable = new ReactiveProperty<ISelectable>();
-            ReactiveProperty<Vector3> newPosition = new ReactiveProperty<Vector3>();
+            ReactiveProperty<ISelectable> selectable = AddDispose(new ReactiveProperty<ISelectable>());
+            ReactiveProperty<Vector3> newPosition = AddDispose(new ReactiveProperty<Vector3>());
             CharacterModel characterModel = new CharacterModel
             {
                 Speed = new ReactiveProperty<float>(3f)

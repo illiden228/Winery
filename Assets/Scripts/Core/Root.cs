@@ -1,8 +1,12 @@
 using System.Collections.Generic;
 using Core;
+using Data;
 using Game.Character;
+using Game.Player;
 using Game.Selectables;
 using Tools;
+using UI;
+using UniRx;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -10,10 +14,16 @@ public class Root : BaseMonobehaviour
 {
     [SerializeField] private Transform _startPositon;
     [SerializeField] private Camera _camera;
+    [SerializeField] private Canvas _mainCanvas;
     [SerializeField] private List<SoilView> _soils;
+    [SerializeField] private List<PlantAsset> _plants;
     private IResourceLoader _resourceLoader;
     private CharacterPm _character;
+    private Inventory _inventory;
+    private Profile _profile;
+    private MainHUDPm _hud;
     private List<SoilPm> _soilPms = new List<SoilPm>();
+    private ReactiveCollection<SeedlingData> _seedlings;
     
     private void Awake()
     {
@@ -36,6 +46,36 @@ public class Root : BaseMonobehaviour
         {
             _soilPms.Add(CreateSoilPm(soil, id++));
         }
+
+        _seedlings = new ReactiveCollection<SeedlingData>();
+        
+        Inventory.Ctx inventoryCtx = new Inventory.Ctx
+        {
+            startSeedlings = _seedlings
+        };
+        _inventory = new Inventory(inventoryCtx);
+
+        Profile.Ctx profileCtx = new Profile.Ctx
+        {
+            inventory = _inventory
+        };
+        _profile = new Profile(profileCtx);
+
+        MainHUDPm.Ctx hudCtx = new MainHUDPm.Ctx
+        {
+            resourceLoader = _resourceLoader,
+            mainCanvas = _mainCanvas,
+            profile = _profile
+        };
+        _hud = new MainHUDPm(hudCtx);
+
+        foreach (var plant in _plants)
+        {
+            _seedlings.Add(new SeedlingData
+            {
+                Plant = plant
+            });
+        }
     }
 
     private SoilPm CreateSoilPm(SoilView view, int id)
@@ -55,6 +95,10 @@ public class Root : BaseMonobehaviour
         }
         _resourceLoader.Dispose();
         _character.Dispose();
+        _seedlings.Dispose();
+        _inventory.Dispose();
+        _profile.Dispose();
+        _hud.Dispose();
         base.OnDestroy();
     }
 }
