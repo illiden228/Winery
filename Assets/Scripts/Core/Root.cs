@@ -13,7 +13,7 @@ using UI;
 using UI.HUD;
 using UI.Select;
 using UniRx;
-using Unity.VisualScripting;
+using NaughtyAttributes;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -21,13 +21,21 @@ public class Root : BaseMonobehaviour
 {
     [SerializeField] private Transform _startPosition;
     [SerializeField] private Camera _camera;
-    [SerializeField] private List<SoilView> _soils;    
+    [BoxGroup("Scene objects")]
+    [SerializeField] private List<SoilView> _soils;
+    [BoxGroup("Scene objects")]
+    [SerializeField] private List<JuicerView> _juicers;
+    [BoxGroup("Scriptable objects")]
     [SerializeField] private PlantCatalog _plantCatalog;
+    [BoxGroup("Scriptable objects")]
     [SerializeField] private GrapeCatalog _grapeCatalog;
+    [BoxGroup("Scriptable objects")]
     [SerializeField] private JuiceCatalog _juiceCatalog;
+    [BoxGroup("Scriptable objects")]
     [SerializeField] private WineCatalog _wineCatalog;
-    [SerializeField] private Canvas _mainCanvas;
+    [BoxGroup("Scriptable objects")]
     [SerializeField] private StartSettings _startSettings;
+    [SerializeField] private Canvas _mainCanvas;    
     [SerializeField] private EventSystem _eventSystem;
     private IResourceLoader _resourceLoader;
     private CharacterPm _character;
