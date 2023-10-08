@@ -9,7 +9,7 @@ namespace Game.Selectables
         public struct Ctx
         {
             public SoilView view;
-            public PlantFactoryPm plantFactory;
+            public PlantFactory plantFactory;
             public int id;
         }
 
