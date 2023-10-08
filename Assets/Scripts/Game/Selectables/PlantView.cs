@@ -38,8 +38,7 @@ public class PlantView : BaseMonobehaviour
 
             if (_grownEffect)
                 _grownEffect.Play();
-        }
-            
+        }            
     }
 
     public void DestroyView()
