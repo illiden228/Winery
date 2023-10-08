@@ -2,7 +2,7 @@ using UnityEngine;
 
 public interface IGrowable
 {
-    void UpdateGrowth(float deltaTime);
+    void UpdateGrowth();
 
     bool Grown { get; }
 }

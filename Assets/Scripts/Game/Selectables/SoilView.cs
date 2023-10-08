@@ -24,7 +24,6 @@ public class SoilView : BaseMonobehaviour, ISelectable
         _cxt.onSelect?.Invoke();
     }
     
-    
 
     // [SerializeField] private float _timeToSlowUpdate = 0.5f;
     // [HorizontalLine(color: EColor.Green)]
