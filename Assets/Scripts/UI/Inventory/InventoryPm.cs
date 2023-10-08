@@ -43,9 +43,9 @@ namespace UI
                 onCloseClick = _ctx.onCloseClick
             });
             
-            foreach (var seedling in _ctx.inventory.Seedlings)
+            foreach (var item in _ctx.inventory.AllItems)
             {
-                _itemCells.Add(CreateCell(seedling));
+                _itemCells.Add(CreateCell(item));
             }
         }
         

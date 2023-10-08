@@ -46,14 +46,12 @@ public class BaseCatalog : ScriptableObject
 
     public T GetAssetById<T>(string id) where T : ItemAsset
     {
-        if (_itemAssets.GetType().GetElementType() is T)
+        for (int i = 0; i < _itemAssets.Length; i++)
         {
-            for (int i = 0; i < _itemAssets.Length; i++)
-            {
-                if (_itemAssets[i].Id == id)
-                    return _itemAssets[i] as T;
-            }
+            if (_itemAssets[i].Id == id && _itemAssets[i].GetType() == typeof(T))
+                return _itemAssets[i] as T;
         }
+
         return null;
     }
 

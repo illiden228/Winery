@@ -21,7 +21,7 @@ namespace Game.Factories
 
         public PlantPm GetPlantPmCtxById(SeedlingData item, Transform parent)
         {
-            PlantView plantView = GameObject.Instantiate(_ctx.plantCatalog.GetAssetById<PlantAsset>("IsabellaGrape").View);
+            PlantView plantView = GameObject.Instantiate(_ctx.plantCatalog.GetAssetById<PlantAsset>(item.Id).View);
             plantView.transform.SetParent(parent, false);
 
             return new PlantPm(new PlantPm.Ctx

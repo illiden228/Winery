@@ -17,11 +17,16 @@ namespace Game.Player
         private readonly Ctx _ctx;
         private ReactiveCollection<Item> _seedlings;
         private ReactiveCollection<Item> _grapes;
+        private ReactiveCollection<Item> _juice;
+        private ReactiveCollection<Item> _wine;
         private ReactiveCollection<Item> _allItems;
         
         public IReadOnlyCollection<Item> Seedlings => _seedlings;
-        public IReadOnlyCollection<Item> Grapes => _grapes;
+        public IReadOnlyCollection<Item> Grapes => _grapes;      
         public IReadOnlyCollection<Item> AllItems => _allItems;
+        public IReadOnlyCollection<Item> Juice => _juice;
+        public IReadOnlyCollection<Item> Wine => _wine;
+
         public IReadOnlyCollection<Item> GetItemsWithType<T>() where T : Item => GetItemsWithType(typeof(T));
         
         public Inventory(Ctx ctx)
@@ -29,6 +34,8 @@ namespace Game.Player
             _ctx = ctx;
             _seedlings = new ReactiveCollection<Item>();
             _grapes = new ReactiveCollection<Item>();
+            _juice = new ReactiveCollection<Item>();
+            _wine = new ReactiveCollection<Item>();
             _allItems = new ReactiveCollection<Item>();
 
             foreach (var item in _ctx.startItems)
@@ -36,12 +43,16 @@ namespace Game.Player
                 SwitchAndAddItem(item);
             }
         }
-        
+
         public IReadOnlyCollection<Item> GetItemsWithType(Type type)
         {
             if (type.Equals(typeof(SeedlingData)))
                 return _seedlings;
-            if(type.Equals(typeof(GrapeData)))
+            if (type.Equals(typeof(GrapeData)))
+                return _grapes;
+            if (type.Equals(typeof(JuiceData)))
+                return _grapes;
+            if (type.Equals(typeof(WineData)))
                 return _grapes;
 
             Debug.LogError($"Imposible find collection for type {type.Name}");
@@ -82,6 +93,12 @@ namespace Game.Player
                     break;
                 case GrapeData:
                     _grapes.Add((GrapeData) item);
+                    break;
+                case JuiceData:
+                    _juice.Add((JuiceData)item);
+                    break;
+                case WineData:
+                    _wine.Add((WineData)item);
                     break;
             }
         }

@@ -91,15 +91,15 @@ public class PlantPm : BaseDisposable, IGrowable
         }
     }
 
-    public void PickUpFruits(Action<SeedlingData> callBack)
+    public void PickUpFruits(Action<Item> callBack)
     {
         if (_currentPlantStage != PlantStages.FruitsRipened)
             return;
 
         UpdateGrowth();
 
-        //to do: change to GrapeData
-        SeedlingData grapeData = new SeedlingData { Count = 1, Id = _ctx.seedling.Id, MaxCount = _ctx.seedling.MaxCount, Name = "Grape", Plant = _ctx.seedling.Plant };
+        //to do: change to fabric
+        GrapeData grapeData = new GrapeData { Count = 1, Id = _ctx.seedling.Id, MaxCount = _ctx.seedling.MaxCount, Name = "Grape"};
 
         callBack?.Invoke(grapeData);
         _ctx.plantView.UpdatePlantView(0);
