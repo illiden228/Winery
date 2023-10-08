@@ -23,11 +23,12 @@ namespace Game.Character
 
         private readonly Ctx _ctx;
         private IDisposable _selectWaiting;
-        private SelectableStatus _currentStatus;
+        private ReactiveProperty<SelectableStatus> _currentStatus;
 
         public CharacterChangeState(Ctx ctx)
         {
             _ctx = ctx;
+            _currentStatus = new ReactiveProperty<SelectableStatus>();
 
             AddDispose(_ctx.newPosition.Subscribe(pos =>
             {
@@ -36,34 +37,11 @@ namespace Game.Character
 
             AddDispose(_ctx.model.IsMove.Subscribe(isMove =>
             {
-                if (!isMove && _ctx.selectable.Value != null)
+                if (isMove)
                 {
-                    if (_currentStatus == null)
+                    if(_ctx.selectable.Value == null)
                         return;
-                    
-                    if (!_currentStatus.NeedSelector)
-                    {
-                        Select(null, _currentStatus.AnimationTriggerName);
-                    }
-                        
-                    ReactiveProperty<Item> item = new ReactiveProperty<Item>();
-                    
-                    _selectWaiting?.Dispose();
-
-                    _selectWaiting = item.SkipLatestValueOnSubscribe().Subscribe(item =>
-                    {
-                        Select(item, _currentStatus.AnimationTriggerName);
-                    });
-                        
-                    _ctx.selectorEvent.Notify(new SelectorInfo
-                    {
-                        Item = item,
-                        Open = true
-                    });
-                }
-                else
-                {
-                    if(_currentStatus == null || !_currentStatus.NeedSelector)
+                    if(_currentStatus.Value == null || !_currentStatus.Value.NeedSelector)
                         return;
                     _selectWaiting?.Dispose();
                     _ctx.selectable.Value = null;
@@ -72,17 +50,49 @@ namespace Game.Character
                         Open = false
                     });
                 }
+                else if (_ctx.selectable.Value != null)
+                {
+                    if(_currentStatus.Value == null)
+                        return;
+                    
+                    if (!_currentStatus.Value.NeedSelector)
+                    {
+                        Select(null, _currentStatus.Value.AnimationTriggerName);
+                        return;
+                    }
+                    
+                    _selectWaiting?.Dispose();
+                        
+                    ReactiveProperty<Item> item = new ReactiveProperty<Item>();
+
+                    _selectWaiting = item.SkipLatestValueOnSubscribe().Subscribe(item =>
+                    {
+                        Select(item, _currentStatus.Value.AnimationTriggerName);
+                    });
+                        
+                    _ctx.selectorEvent.Notify(new SelectorInfo
+                    {
+                        Item = item,
+                        Open = true
+                    });
+                }
             }));
 
             AddDispose(_ctx.selectable.Subscribe(selectable =>
             {
                 if (selectable == null)
                 {
-                    _currentStatus = null;
+                    _currentStatus.Value = null;
                     return;
                 }
 
-                _currentStatus = selectable.GetSelectState();
+                _currentStatus.Value = selectable.GetSelectState();
+            }));
+
+            AddDispose(_currentStatus.Subscribe(status =>
+            {
+                if (status == null)
+                    _ctx.selectable.Value = null;
             }));
         }
 
