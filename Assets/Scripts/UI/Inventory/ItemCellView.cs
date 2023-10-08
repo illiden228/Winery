@@ -15,11 +15,13 @@ namespace UI
             public Action onItemClick;
             public Sprite background;
             public string name;
+            public IReadOnlyReactiveProperty<int> count;
         }
 
         [SerializeField] private Button _itemButton;
         [SerializeField] private Image _background;
         [SerializeField] private TMP_Text _nameLabel;
+        [SerializeField] private TMP_Text _countLabel;
         private Ctx _ctx;
 
         public void Init(Ctx ctx)
@@ -28,9 +30,15 @@ namespace UI
             _background.sprite = _ctx.background;
             _nameLabel.text = _ctx.name;
 
-            _itemButton.OnClickAsObservable()
-                .Subscribe(_ => _ctx.onItemClick?.Invoke())
-                .AddTo(_ctx.viewDisposables);
+            _ctx.count.Subscribe(count =>
+            {
+                _countLabel.text = count.ToString();
+            }).AddTo(_ctx.viewDisposables);
+
+            if(_itemButton != null)
+                _itemButton.OnClickAsObservable()
+                    .Subscribe(_ => _ctx.onItemClick?.Invoke())
+                    .AddTo(_ctx.viewDisposables);
         }
     }
 }

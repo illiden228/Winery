@@ -10,6 +10,8 @@ public class PlantAsset : ScriptableObject
     [SerializeField] private float _growTime;
     [SerializeField] private GameObject[] _growthStagePrefabs;
     [SerializeField] private int _cost;
+    [SerializeField] private int _maxStackCount;
+
 
     public string Name => _name;
     public string Id => _id;
@@ -17,6 +19,7 @@ public class PlantAsset : ScriptableObject
     public Sprite Icon => _icon;
     public float GrowthTime => _growTime;
     public int Cost => _cost;
+    public int MaxStackCount => _maxStackCount;
 
     public GameObject[] GetGrowthStagePrefabs()
     {

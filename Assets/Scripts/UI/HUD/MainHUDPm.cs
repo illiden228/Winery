@@ -1,4 +1,5 @@
 ﻿using Core;
+using Data;
 using Game.Player;
 using Game.Purchasing;
 using Tools;
@@ -7,7 +8,7 @@ using UI.Store;
 using UniRx;
 using UnityEngine;
 
-namespace UI
+namespace UI.HUD
 {
     public class MainHUDPm : BaseDisposable
     {
@@ -17,6 +18,7 @@ namespace UI
             public Canvas mainCanvas;
             public IReadOnlyProfile profile;
             public ReactiveEvent<Purchase> purchaseEvent;
+            public ReactiveCollection<Item> stock;
         }
 
         private readonly Ctx _ctx;
@@ -76,8 +78,8 @@ namespace UI
                 resourceLoader = _ctx.resourceLoader,
                 open = open,
                 onCloseClick = () => open.Value = false,
-                inventory = _ctx.profile.Inventory,
-                purchaseEvent = _ctx.purchaseEvent
+                purchaseEvent = _ctx.purchaseEvent,
+                stock = _ctx.stock
             });
         }
 

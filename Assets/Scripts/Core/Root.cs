@@ -9,6 +9,7 @@ using Game.Factories;
 using Game.Purchasing;
 using Tools.Extensions;
 using UI;
+using UI.HUD;
 using UniRx;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -68,11 +69,16 @@ public class Root : BaseMonobehaviour
         }
 
         List<SeedlingData> seedlingDatas = new List<SeedlingData>();
-        foreach (var plantAsset in _startSettings.StartPlants)
+        foreach (var asset in _startSettings.StartPlants)
         {
             seedlingDatas.Add(new SeedlingData
             {
-                Plant = plantAsset
+                Plant = asset,
+                Count = 1,
+                Icon = asset.Icon,
+                Id = asset.Id,
+                Name = asset.Name,
+                MaxCount = asset.MaxStackCount
             });
         }
         
@@ -97,12 +103,26 @@ public class Root : BaseMonobehaviour
         };
         _purchaseDispatcher = new PurchaseDispatcher(purchaseDispatcherCtx);
 
+        ReactiveCollection<Item> stock = new ReactiveCollection<Item>();
+        foreach (var asset in _startSettings.StartStock)
+        {
+            stock.Add(new SeedlingData
+            {
+                Plant = asset,
+                Count = 1,
+                Icon = asset.Icon,
+                Id = asset.Id,
+                Name = asset.Name,
+                MaxCount = asset.MaxStackCount
+            });
+        }
         MainHUDPm.Ctx hudCtx = new MainHUDPm.Ctx
         {
             resourceLoader = _resourceLoader,
             mainCanvas = _mainCanvas,
             profile = _profile,
             purchaseEvent = _purchaseEvent,
+            stock = stock
         };
         _hud = new MainHUDPm(hudCtx);
     }

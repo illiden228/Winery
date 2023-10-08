@@ -49,13 +49,13 @@ namespace UI
             }
         }
         
-        private ItemCellPm CreateCell(SeedlingData seedling)
+        private ItemCellPm CreateCell(Item item)
         {
             ItemCellPm.Ctx itemCellCtx = new ItemCellPm.Ctx
             {
                 resourceLoader = _ctx.resourceLoader,
                 container = _view.Container,
-                plantData = seedling
+                item = item,
             };
             return new ItemCellPm(itemCellCtx);
         }

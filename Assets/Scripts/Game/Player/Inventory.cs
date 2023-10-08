@@ -24,11 +24,25 @@ namespace Game.Player
 
         public void AddItemToInventory(SeedlingData seedlingData)
         {
+            foreach (var seedling in _seedlings)
+            {
+                if (seedling.TryAdd(seedlingData.Plant.Id, seedlingData.Count))
+                {
+                    return;
+                }
+            }
             _seedlings.Add(seedlingData);
         }
 
         public void RemoveFromInventory(SeedlingData seedlingData)
         {
+            foreach (var seedling in _seedlings)
+            {
+                if (seedling.TryRemove(seedlingData.Plant.Id, seedlingData.Count))
+                {
+                    return;
+                }
+            }
             _seedlings.Remove(seedlingData);
         }
     }
