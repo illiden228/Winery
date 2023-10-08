@@ -1,9 +1,10 @@
 ﻿using Core;
+using Data;
 using Game.Selectables;
 using Tools;
+using Tools.Extensions;
 using UniRx;
 using UnityEngine;
-using UnityEngine.UIElements.Experimental;
 
 namespace Game.Character
 {
@@ -14,6 +15,7 @@ namespace Game.Character
             public IResourceLoader resourceLoader;
             public Vector3 startPosition;
             public Camera camera;
+            public float startSpeed;
         }
 
         private readonly Ctx _ctx;
@@ -24,20 +26,28 @@ namespace Game.Character
         public CharacterPm(Ctx ctx)
         {
             _ctx = ctx;
-            _targetPosition = new ReactiveProperty<Vector3>();
+            _targetPosition = AddDispose(new ReactiveProperty<Vector3>());
             _ctx.resourceLoader.LoadPrefab("fake", CHARACTER_VIEW_PREFAB_NAME, OnViewLoaded);
         }
 
         private void OnViewLoaded(GameObject view)
         {
-            _view = GameObject.Instantiate(view, _ctx.startPosition, Quaternion.identity).GetComponent<CharacterView>();
-
-            ReactiveProperty<ISelectable> selectable = new ReactiveProperty<ISelectable>();
-            ReactiveProperty<Vector3> newPosition = new ReactiveProperty<Vector3>();
             CharacterModel characterModel = new CharacterModel
             {
-                Speed = new ReactiveProperty<float>(3f)
+                Speed = new ReactiveProperty<float>(_ctx.startSpeed)
             };
+            
+            ReactiveProperty<ISelectable> selectable = AddDispose(new ReactiveProperty<ISelectable>());
+            ReactiveProperty<Vector3> newPosition = AddDispose(new ReactiveProperty<Vector3>());
+            ReactiveEvent<string> animationEvent = new ReactiveEvent<string>();
+            _view = GameObject.Instantiate(view, _ctx.startPosition, Quaternion.identity).GetComponent<CharacterView>();
+            _view.Init(new CharacterView.Ctx
+            {
+                viewDisposable = AddDispose(new CompositeDisposable()),
+                animationAction = animationEvent,
+                isMove = characterModel.IsMove
+            });
+
             CharacterMovePm.Ctx characterMoveCtx = new CharacterMovePm.Ctx
             {
                 model = characterModel,
@@ -51,7 +61,6 @@ namespace Game.Character
                 targetPosition = newPosition,
                 selectable = selectable,
                 camera = _ctx.camera,
-                
             };
             AddDispose(new CharacterTargeter(targeterCtx));
 
@@ -60,7 +69,8 @@ namespace Game.Character
                 selectable = selectable,
                 newPosition = newPosition,
                 targetPosition = _targetPosition,
-                model = characterModel
+                model = characterModel,
+                animationEvent = animationEvent
             };
             AddDispose(new CharacterChangeState(changeStateCtx));
         }

@@ -1,5 +1,6 @@
 ﻿using Core;
 using Game.Selectables;
+using Tools.Extensions;
 using UniRx;
 using UnityEngine;
 
@@ -13,6 +14,7 @@ namespace Game.Character
             public ReactiveProperty<Vector3> targetPosition;
             public ReactiveProperty<Vector3> newPosition;
             public CharacterModel model;
+            public ReactiveEvent<string> animationEvent;
         }
 
         private readonly Ctx _ctx;
@@ -31,6 +33,7 @@ namespace Game.Character
                 if (!isMove && _ctx.selectable.Value != null)
                 {
                     _ctx.selectable.Value.Select();
+                    _ctx.animationEvent.Notify(CharacterAnimation.Triggers.Take);
                     _ctx.selectable.Value = null;
                 }
             }));
