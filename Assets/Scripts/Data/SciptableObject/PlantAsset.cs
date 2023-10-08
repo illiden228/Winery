@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "PlantAsset", menuName = "ScriptableObjects/PlantAsset", order = 0)]
+[CreateAssetMenu(fileName = "PlantAsset", menuName = "ScriptableObjects/ItemAssets/PlantAsset", order = 0)]
 public class PlantAsset : ItemAsset
 {    
     [SerializeField] private float _growTime;

@@ -9,8 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f11f4ee0937436f45b4c2b97ae521f80, type: 3}
-  m_Name: PlantCatalog
+  m_Script: {fileID: 11500000, guid: 68528e43c48e3e644a68599be300a7f9, type: 3}
+  m_Name: Isabella Grape Asset
   m_EditorClassIdentifier: 
-  _plantAssets:
-  - {fileID: 11400000, guid: f02fc3237f6f3a840acb36db4879d290, type: 2}
+  _name: Isabella Grape
+  _id: Isabella
+  _description: 'Isabella Grape '
+  _icon: {fileID: 0}
