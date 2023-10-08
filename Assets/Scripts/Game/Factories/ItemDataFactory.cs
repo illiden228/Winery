@@ -26,7 +26,7 @@ namespace Factories
             switch (asset)
             {
                 case PlantAsset:
-                    PlantAsset plantAsset = _ctx.plantCatalog.GetPlantAssetById(asset.Id);
+                    PlantAsset plantAsset = _ctx.plantCatalog.GetAssetById<PlantAsset>(asset.Id);
                     item = new SeedlingData
                     {
                         Id = plantAsset.Id,
