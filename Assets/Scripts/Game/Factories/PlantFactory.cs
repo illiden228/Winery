@@ -1,5 +1,6 @@
 ﻿using Core;
 using Data;
+using Factories;
 using UnityEngine;
 
 namespace Game.Factories
@@ -9,10 +10,10 @@ namespace Game.Factories
         public struct Ctx
         {
             public PlantCatalog plantCatalog;
+            public ItemDataFactory itemDataFactory;
         }
         
         private readonly Ctx _ctx;
-        private const string PlantViewName = "PlantView";
 
         public PlantFactory(Ctx ctx)
         {
@@ -27,7 +28,8 @@ namespace Game.Factories
             return new PlantPm(new PlantPm.Ctx
             {
                 plantView = plantView,
-                seedling = item,                
+                seedling = item,
+                itemDataFactory = _ctx.itemDataFactory
             });
         }
     }

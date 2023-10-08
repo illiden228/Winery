@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: Isabella Grape Asset
   m_EditorClassIdentifier: 
   _name: Isabella Grape
-  _id: Isabella
+  _id: IsabellaGrape
   _description: 'Isabella Grape '
   _icon: {fileID: 0}

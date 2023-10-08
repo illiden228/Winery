@@ -23,6 +23,9 @@ public class Root : BaseMonobehaviour
     [SerializeField] private Camera _camera;
     [SerializeField] private List<SoilView> _soils;    
     [SerializeField] private PlantCatalog _plantCatalog;
+    [SerializeField] private GrapeCatalog _grapeCatalog;
+    [SerializeField] private JuiceCatalog _juiceCatalog;
+    [SerializeField] private WineCatalog _wineCatalog;
     [SerializeField] private Canvas _mainCanvas;
     [SerializeField] private StartSettings _startSettings;
     [SerializeField] private EventSystem _eventSystem;
@@ -44,28 +47,26 @@ public class Root : BaseMonobehaviour
         _purchaseEvent = new ReactiveEvent<Purchase>();
         _selectorEvent = new ReactiveEvent<SelectorInfo>();
         
-        _plantFactoryPm = new PlantFactory(new PlantFactory.Ctx
-        {
-            plantCatalog = _plantCatalog
-        });
-
         _itemDataFactory = new ItemDataFactory(new ItemDataFactory.Ctx
         {
-            plantCatalog = _plantCatalog
+            plantCatalog = _plantCatalog,
+            grapeCatalog = _grapeCatalog,
+            juiceCatalog = _juiceCatalog,
+            wineCatalog = _wineCatalog
         });
-        
+
+        _plantFactoryPm = new PlantFactory(new PlantFactory.Ctx
+        {
+            plantCatalog = _plantCatalog,
+            itemDataFactory = _itemDataFactory
+        });
+
         _resourceLoader = new ResourcePreLoader(new ResourcePreLoader.Ctx
         {
             maxLoadDelay = 0f,
             minLoadDelay = 0f
         });
-        
-        int id = 0;
-        foreach (var soil in _soils)
-        {
-            _soilPms.Add(CreateSoilPm(soil, id++));
-        }
-        
+                
         List<Item> startInventory = new List<Item>();
         foreach (var asset in _startSettings.StartPlants)
         {
@@ -128,6 +129,12 @@ public class Root : BaseMonobehaviour
             selectorEvent = _selectorEvent
         };
         _selector = new SelectorPm(selectorCtx);
+
+        int id = 0;
+        foreach (var soil in _soils)
+        {
+            _soilPms.Add(CreateSoilPm(soil, id++));
+        }
     }
 
     private SoilPm CreateSoilPm(SoilView view, int id)

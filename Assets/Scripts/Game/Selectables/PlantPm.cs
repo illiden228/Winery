@@ -3,6 +3,7 @@ using System;
 using Data;
 using Tools.Extensions;
 using UnityEngine;
+using Factories;
 
 public class PlantPm : BaseDisposable, IGrowable
 {
@@ -10,6 +11,7 @@ public class PlantPm : BaseDisposable, IGrowable
     {
         public PlantView plantView;
         public SeedlingData seedling;
+        public ItemDataFactory itemDataFactory;
     }
 
     public enum PlantStages
@@ -98,10 +100,7 @@ public class PlantPm : BaseDisposable, IGrowable
 
         UpdateGrowth();
 
-        //to do: change to fabric
-        GrapeData grapeData = new GrapeData { Count = 1, Id = _ctx.seedling.Id, MaxCount = _ctx.seedling.MaxCount, Name = "Grape"};
-
-        callBack?.Invoke(grapeData);
+        callBack?.Invoke(_ctx.itemDataFactory.CreateObject(_ctx.seedling.Production, 1));
         _ctx.plantView.UpdatePlantView(0);
         Debug.Log("Плоды собраны!");
     }

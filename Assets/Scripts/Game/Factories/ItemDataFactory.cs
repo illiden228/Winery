@@ -10,6 +10,9 @@ namespace Factories
         public struct Ctx
         {
             public PlantCatalog plantCatalog;
+            public GrapeCatalog grapeCatalog;
+            public JuiceCatalog juiceCatalog;
+            public WineCatalog wineCatalog;
         }
 
         private readonly Ctx _ctx;
@@ -28,7 +31,7 @@ namespace Factories
                     {
                         PlantAsset plantAsset = _ctx.plantCatalog.GetAssetById<PlantAsset>(asset.Id);
                         item = new SeedlingData
-                        {
+                         {
                             Id = plantAsset.Id,
                             Name = plantAsset.Name,
                             MaxCount = plantAsset.MaxStackCount,
@@ -38,25 +41,26 @@ namespace Factories
                             SproutStageCount = plantAsset.SproutStageCount,
                             Icon = plantAsset.Icon,
                             Cost = plantAsset.Cost,
-                            Count = count
+                            Count = count,
+                            Production = plantAsset.Production
                         };
                         break;
                     }
                 case GrapeAsset:
                     {
-                        GrapeAsset grapeAsset = _ctx.plantCatalog.GetAssetById<GrapeAsset>(asset.Id);
+                        GrapeAsset grapeAsset = _ctx.grapeCatalog.GetAssetById<GrapeAsset>(asset.Id);
                         item = new GrapeData
                         {
                             Id = grapeAsset.Id,
                             Name = grapeAsset.Name,
                             Icon = grapeAsset.Icon,
                             Count = count
-                        };
+    };
                         break;
                     }
                 case JuiceAsset:
                     {
-                        JuiceAsset grapeAsset = _ctx.plantCatalog.GetAssetById<JuiceAsset>(asset.Id);
+                        JuiceAsset grapeAsset = _ctx.juiceCatalog.GetAssetById<JuiceAsset>(asset.Id);
                         item = new JuiceData
                         {
                             Id = grapeAsset.Id,
@@ -68,7 +72,7 @@ namespace Factories
                     }
                 case WineAsset:
                     {
-                        WineAsset grapeAsset = _ctx.plantCatalog.GetAssetById<WineAsset>(asset.Id);
+                        WineAsset grapeAsset = _ctx.wineCatalog.GetAssetById<WineAsset>(asset.Id);
                         item = new WineData
                         {
                             Id = grapeAsset.Id,

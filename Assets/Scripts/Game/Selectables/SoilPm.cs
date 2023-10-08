@@ -4,6 +4,7 @@ using Game.Character;
 using UnityEngine;
 using Game.Factories;
 using Game.Player;
+using Factories;
 
 namespace Game.Selectables
 {
@@ -13,6 +14,7 @@ namespace Game.Selectables
         {
             public SoilView view;
             public PlantFactory plantFactory;
+            public ItemDataFactory itemDataFactory;
             public Inventory inventory;
             public int id;
         }

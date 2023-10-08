@@ -9,5 +9,6 @@ namespace Data
         public float FruitRipeTime;
         public int SproutStageCount;
         public int RipeStageCount;
+        public ItemAsset Production;
     }
 }
