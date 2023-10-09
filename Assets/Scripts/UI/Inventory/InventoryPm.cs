@@ -29,7 +29,7 @@ namespace UI
         {
             _ctx = ctx;
             _itemCells = new List<ItemCellPm>();
-            _ctx.resourceLoader.LoadPrefab("fake", VIEW_PREFAB_NAME, OnViewLoaded);
+            _ctx.resourceLoader.LoadPrefab("fake", VIEW_PREFAB_NAME, viewPrefab => OnViewLoaded(viewPrefab));
         }
 
         private void OnViewLoaded(GameObject viewPrefab)
@@ -46,6 +46,27 @@ namespace UI
             foreach (var item in _ctx.inventory.AllItems)
             {
                 _itemCells.Add(CreateCell(item));
+            }
+
+            AddDispose(_ctx.inventory.AllItems.ObserveAdd().Subscribe(OnAddItem));
+            AddDispose(_ctx.inventory.AllItems.ObserveRemove().Subscribe(OnRemoveItem));
+        }
+
+        private void OnAddItem(CollectionAddEvent<Item> addEvent)
+        {
+            _itemCells.Add(CreateCell(addEvent.Value));
+        }
+        
+        private void OnRemoveItem(CollectionRemoveEvent<Item> removeEvent)
+        {
+            for (int i = 0; i < _itemCells.Count; i++)
+            {
+                if (_itemCells[i].Item == removeEvent.Value)
+                {
+                    _itemCells[i].Dispose();
+                    _itemCells.Remove(_itemCells[i]);
+                    break;
+                }
             }
         }
         

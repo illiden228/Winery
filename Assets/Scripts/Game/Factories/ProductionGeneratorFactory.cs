@@ -50,6 +50,13 @@ namespace Game.Factories
                         inventory = _ctx.inventory,
                     });
                     break;
+                case WineData:
+                    generator = new BarrelPm(new BarrelPm.Ctx
+                    {
+                        itemDataFactory = _ctx.itemDataFactory,
+                        inventory = _ctx.inventory,
+                    });
+                    break;
                 default:
                     Debug.Log($"Don't find asset with id {asset.Id}");
                     break;

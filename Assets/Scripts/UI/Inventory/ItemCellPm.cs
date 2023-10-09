@@ -21,6 +21,8 @@ namespace UI
         private ItemCellView _view;
         private const string VIEW_PREFAB_NAME = "ItemCellView";
 
+        public Item Item => _ctx.item;
+
         public ItemCellPm(Ctx ctx)
         {
             _ctx = ctx;

@@ -52,8 +52,6 @@ namespace Game.Selectables
                 Debug.LogError("View is missing");
                 return;
             }
-            
-            _grapeData = (GrapeData)to;
         }
 
         private SelectableStatus OnGetSelectStatus()
@@ -95,6 +93,8 @@ namespace Game.Selectables
                     {
                         if (_juicerProductionCallDisposable !=null)
                             _juicerProductionCallDisposable.Dispose();
+                        
+                        _ctx.inventory.RemoveFromInventory(item);
 
                         _currentJuicerState = JuicerState.InProcess;
 

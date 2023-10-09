@@ -26,6 +26,7 @@ namespace Core
         private readonly Ctx _ctx;
         private ReactiveCollection<SoilPm> _soils;
         private ReactiveCollection<JuicerPm> _juicers;
+        private ReactiveCollection<BarrelPm> _barrels;
 
         public Root(Ctx ctx)
         {
@@ -75,7 +76,8 @@ namespace Core
             {
                 ProductionGeneratorFactory = productionGeneratorFactory,
                 startSoils = _ctx.sceneContext.Soils,
-                startJuicers = _ctx.sceneContext.Juicers
+                startJuicers = _ctx.sceneContext.Juicers,
+                startBarrels = _ctx.sceneContext.Barrels
             }));
 
             CharacterPm character = AddDispose(new CharacterPm(new CharacterPm.Ctx
@@ -114,6 +116,7 @@ namespace Core
 
             _soils = startContextLoader.StartSoils;
             _juicers = startContextLoader.StartJuicers;
+            _barrels = startContextLoader.StartBarrels;
         }
 
         protected override void OnDispose()
@@ -129,6 +132,12 @@ namespace Core
                 _juicers[i].Dispose();
             }
             _juicers.Dispose();
+            
+            for (int i = 0; i < _barrels.Count; i++)
+            {
+                _barrels[i].Dispose();
+            }
+            _barrels.Dispose();
             
             base.OnDispose();
         }

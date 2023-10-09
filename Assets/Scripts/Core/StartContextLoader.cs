@@ -14,12 +14,14 @@ namespace Core
             public ProductionGeneratorFactory ProductionGeneratorFactory;
             public List<SoilView> startSoils;
             public List<JuicerView> startJuicers;
+            public List<BarrelView> startBarrels;
         }
 
         private readonly Ctx _ctx;
         
         public ReactiveCollection<SoilPm> StartSoils => GetStartSoils();
         public ReactiveCollection<JuicerPm> StartJuicers => GetStartJuicers();
+        public ReactiveCollection<BarrelPm> StartBarrels => GetStartBarrels();
 
         public StartContextLoader(Ctx ctx)
         {
@@ -50,6 +52,19 @@ namespace Core
             }
 
             return juicers;
+        }
+        
+        private ReactiveCollection<BarrelPm> GetStartBarrels()
+        {
+            ReactiveCollection<BarrelPm> barrel = new ReactiveCollection<BarrelPm>();
+            foreach (var barrelView in _ctx.startBarrels)
+            {
+                BarrelPm newBarrel = (BarrelPm) _ctx.ProductionGeneratorFactory.CreateObject(new WineData());
+                newBarrel.InitView(barrelView);
+                barrel.Add(newBarrel);
+            }
+
+            return barrel;
         }
     }
 }

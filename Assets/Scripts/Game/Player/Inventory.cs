@@ -21,13 +21,13 @@ namespace Game.Player
         private ReactiveCollection<Item> _wine;
         private ReactiveCollection<Item> _allItems;
         
-        public IReadOnlyCollection<Item> Seedlings => _seedlings;
-        public IReadOnlyCollection<Item> Grapes => _grapes;      
-        public IReadOnlyCollection<Item> AllItems => _allItems;
-        public IReadOnlyCollection<Item> Juice => _juice;
-        public IReadOnlyCollection<Item> Wine => _wine;
+        public IReadOnlyReactiveCollection<Item> Seedlings => _seedlings;
+        public IReadOnlyReactiveCollection<Item> Grapes => _grapes;
+        public IReadOnlyReactiveCollection<Item> AllItems => _allItems;
+        public IReadOnlyReactiveCollection<Item> Juice => _juice;
+        public IReadOnlyReactiveCollection<Item> Wine => _wine;
 
-        public IReadOnlyCollection<Item> GetItemsWithType<T>() where T : Item => GetItemsWithType(typeof(T));
+        public IReadOnlyReactiveCollection<Item> GetItemsWithType<T>() where T : Item => GetItemsWithType(typeof(T));
         
         public Inventory(Ctx ctx)
         {
@@ -44,16 +44,16 @@ namespace Game.Player
             }
         }
 
-        public IReadOnlyCollection<Item> GetItemsWithType(Type type)
+        public IReadOnlyReactiveCollection<Item> GetItemsWithType(Type type)
         {
             if (type.Equals(typeof(SeedlingData)))
                 return _seedlings;
             if (type.Equals(typeof(GrapeData)))
                 return _grapes;
             if (type.Equals(typeof(JuiceData)))
-                return _grapes;
+                return _juice;
             if (type.Equals(typeof(WineData)))
-                return _grapes;
+                return _wine;
 
             Debug.LogError($"Imposible find collection for type {type.Name}");
             return null;
@@ -77,6 +77,8 @@ namespace Game.Player
             {
                 if (item.TryRemove(newItem.Id, newItem.Count))
                 {
+                    if (item.Count == 0)
+                        break;
                     return;
                 }
             }
