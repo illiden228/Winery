@@ -27,6 +27,7 @@ namespace Core
         private ReactiveCollection<SoilPm> _soils;
         private ReactiveCollection<JuicerPm> _juicers;
         private ReactiveCollection<BarrelPm> _barrels;
+        private CarPm _car;
 
         public Root(Ctx ctx)
         {
@@ -74,6 +75,8 @@ namespace Core
 
             StartContextLoader startContextLoader = AddDispose(new StartContextLoader(new StartContextLoader.Ctx
             {
+                inventory = inventory,
+                purchaseEvent = purchaseEvent,
                 ProductionGeneratorFactory = productionGeneratorFactory,
                 startSoils = _ctx.sceneContext.Soils,
                 startJuicers = _ctx.sceneContext.Juicers,
@@ -117,6 +120,7 @@ namespace Core
             _soils = startContextLoader.StartSoils;
             _juicers = startContextLoader.StartJuicers;
             _barrels = startContextLoader.StartBarrels;
+            _car = startContextLoader.Car;
         }
 
         protected override void OnDispose()

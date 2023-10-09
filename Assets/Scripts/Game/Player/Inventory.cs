@@ -71,17 +71,18 @@ namespace Game.Player
             SwitchAndAddItem(newItem);
         }
         
-        public void RemoveFromInventory(Item newItem, int count)
+        public void RemoveFromInventory(Item newItem, int count = 0)
         {
-            foreach (var item in _allItems)
-            {
-                if (item.TryRemove(newItem.Id, count))
+            if(count != 0)
+                foreach (var item in _allItems)
                 {
-                    if (item.Count == 0)
-                        break;
-                    return;
+                    if (item.TryRemove(newItem.Id, count))
+                    {
+                        if (item.Count == 0)
+                            break;
+                        return;
+                    }
                 }
-            }
             SwitchAndRemoveItem(newItem);
         }
 

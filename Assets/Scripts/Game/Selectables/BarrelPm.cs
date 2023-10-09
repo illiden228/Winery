@@ -16,17 +16,10 @@ namespace Game.Selectables
             public ItemDataFactory itemDataFactory;
             public Inventory inventory;
         }
-        
-        public enum BarrelState
-        {
-            Empty,
-            InProcess,
-            Ready
-        }
 
         private readonly Ctx _ctx;
         private BarrelView _view;
-        private BarrelState _currentBarrelState;
+        private ProductionState _currentState;
         private IDisposable _barrleProductionCallDisposable;
         private JuiceData _juiceData;
 
@@ -34,7 +27,6 @@ namespace Game.Selectables
         {
             _ctx = ctx;
         }
-
 
         public override void StartGeneration(Item to, Item from = null)
         {
@@ -57,9 +49,9 @@ namespace Game.Selectables
         
         private SelectableStatus OnGetSelectStatus()
         {
-            switch (_currentBarrelState)
+            switch (_currentState)
             {
-                case BarrelState.Empty:
+                case ProductionState.Empty:
                     {
                         return new SelectableStatus
                         {
@@ -68,12 +60,12 @@ namespace Game.Selectables
                             AnimationTriggerName = CharacterAnimation.Triggers.Take
                         };
                     }
-                case BarrelState.InProcess:
+                case ProductionState.InProcess:
                     {
 
                         break;
                     }
-                case BarrelState.Ready:
+                case ProductionState.Ready:
                     {
                         return new SelectableStatus
                         {
@@ -88,16 +80,16 @@ namespace Game.Selectables
 
         private void OnSelect(Item item)
         {
-            switch (_currentBarrelState)
+            switch (_currentState)
             {
-                case BarrelState.Empty:
+                case ProductionState.Empty:
                     {
                         if (_barrleProductionCallDisposable !=null)
                             _barrleProductionCallDisposable.Dispose();
                         
                         _ctx.inventory.RemoveFromInventory(item, 1);
 
-                        _currentBarrelState = BarrelState.InProcess;
+                        _currentState = ProductionState.InProcess;
 
                         _juiceData = (item as JuiceData);
 
@@ -110,28 +102,28 @@ namespace Game.Selectables
                             if (_barrleProductionCallDisposable != null)
                                 _barrleProductionCallDisposable.Dispose();
 
-                            _currentBarrelState = BarrelState.Ready;
+                            _currentState = ProductionState.Ready;
                         });
                         break;
                     }
-                case BarrelState.InProcess:
+                case ProductionState.InProcess:
                     {
 
                         break;
                     }
-                case BarrelState.Ready:
+                case ProductionState.Ready:
                     {
-                        TransferJuiceToInventory();
+                        TransferWineToInventory();
                         break;
                     }
             }
         }
 
-        private void TransferJuiceToInventory()
+        private void TransferWineToInventory()
         {
             Debug.Log($"В инвентарь добавлено: {_juiceData.Production.Name} 1 шт.");
             _ctx.inventory.AddItemToInventory(_ctx.itemDataFactory.CreateObject(_juiceData.Production), _juiceData.ProductionCount);
-            _currentBarrelState = BarrelState.Empty;
+            _currentState = ProductionState.Empty;
         }
     }
 }
