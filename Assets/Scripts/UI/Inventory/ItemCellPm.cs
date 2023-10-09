@@ -49,7 +49,8 @@ namespace UI
 
         protected override void OnDispose()
         {
-            GameObject.Destroy(_view.gameObject);
+            if(_view != null)
+                GameObject.Destroy(_view.gameObject);
             base.OnDispose();
         }
     }

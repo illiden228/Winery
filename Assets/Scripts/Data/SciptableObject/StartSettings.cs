@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using NaughtyAttributes;
 using UnityEngine;
 
 namespace Data
@@ -8,13 +9,25 @@ namespace Data
     {
         [SerializeField] private float _characterSpeed;
         [SerializeField] private int _startMoneys;
-        [SerializeField] private List<PlantAsset> _startPlants;
-        [SerializeField] private List<PlantAsset> _startStock;
+        [SerializeField] private List<SeedlingAsset> _startPlants;
+        [SerializeField] private List<SeedlingAsset> _startStock;
+        [BoxGroup("Scriptable objects")]
+        [SerializeField] private PlantCatalog _plantCatalog;
+
+        [BoxGroup("Scriptable objects")]
+        [SerializeField] private GrapeCatalog _grapeCatalog;
+        [BoxGroup("Scriptable objects")]
+        [SerializeField] private JuiceCatalog _juiceCatalog;
+        [BoxGroup("Scriptable objects")]
+        [SerializeField] private WineCatalog _wineCatalog;
 
         public float CharacterSpeed => _characterSpeed;
         public int StartMoneys => _startMoneys;
-
-        public List<PlantAsset> StartPlants => _startPlants;
-        public List<PlantAsset> StartStock => _startStock;
+        public List<SeedlingAsset> StartPlants => _startPlants;
+        public List<SeedlingAsset> StartStock => _startStock;
+        public PlantCatalog PlantCatalog => _plantCatalog;
+        public GrapeCatalog GrapeCatalog => _grapeCatalog;
+        public JuiceCatalog JuiceCatalog => _juiceCatalog;
+        public WineCatalog WineCatalog => _wineCatalog;
     }
 }

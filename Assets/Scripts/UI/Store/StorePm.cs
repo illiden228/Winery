@@ -66,7 +66,7 @@ namespace UI.Store
                     {
                         Item = new SeedlingData
                         {
-                            Plant = (item as SeedlingData)?.Plant
+                            Seedling = (item as SeedlingData)?.Seedling
                         },
                     });
                 }

@@ -9,14 +9,12 @@ using Tools.Extensions;
 
 namespace Game.Selectables
 {
-    public class JuicerPm : BaseDisposable
+    public class JuicerPm : ProdutionGenerator
     {
         public struct Ctx
         {
-            public JuicerView view;
             public ItemDataFactory itemDataFactory;
             public Inventory inventory;
-            public int id;
         }
 
         public enum JuicerState
@@ -30,15 +28,32 @@ namespace Game.Selectables
         private JuicerState _currentJuicerState;
         private IDisposable _juicerProductionCallDisposable;
         private GrapeData _grapeData;
+        private JuicerView _view;
 
         public JuicerPm(Ctx ctx)
         {
             _ctx = ctx;
-            _ctx.view.Init(new JuicerView.Ctx
+        }
+
+        public void InitView(JuicerView view)
+        {
+            _view = view;
+            _view.Init(new JuicerView.Ctx
             {
                 onSelect = OnSelect,
                 getStatus = OnGetSelectStatus
             });
+        }
+        
+        public override void StartGeneration(Item to, Item from = null)
+        {
+            if (_view == null)
+            {
+                Debug.LogError("View is missing");
+                return;
+            }
+            
+            _grapeData = (GrapeData)to;
         }
 
         private SelectableStatus OnGetSelectStatus()
@@ -85,11 +100,11 @@ namespace Game.Selectables
 
                         _grapeData = (item as GrapeData);
 
-                        Debug.Log($"Соковыжималка начала производство сока: {item.Name}");
+                        Debug.Log($"РЎРѕРєРѕРІС‹Р¶РёРјР°Р»РєР° РЅР°С‡Р°Р»Р° РїСЂРѕРёР·РІРѕРґСЃС‚РІРѕ СЃРѕРєР°: {item.Name}");
 
                         _juicerProductionCallDisposable = ReactiveExtensions.DelayedCall(_grapeData.ProductionTime, () =>
                         {
-                            Debug.Log($"Соковыжималка произвела: {item.Name}");
+                            Debug.Log($"РЎРѕРєРѕРІС‹Р¶РёРјР°Р»РєР° РїСЂРѕРёР·РІРµР»Р°: {item.Name}");
 
                             if (_juicerProductionCallDisposable != null)
                                 _juicerProductionCallDisposable.Dispose();
@@ -113,8 +128,8 @@ namespace Game.Selectables
 
         private void TransferJuiceToInventory()
         {
-            Debug.Log($"В инвентарь добавлено: {_grapeData.Production.Name} 1 шт.");
-            _ctx.inventory.AddItemToInventory(_ctx.itemDataFactory.CreateObject(_grapeData.Production, 1));
+            Debug.Log($"Р’ РёРЅРІРµРЅС‚Р°СЂСЊ РґРѕР±Р°РІР»РµРЅРѕ: {_grapeData.Production.Name} 1 С€С‚.");
+            _ctx.inventory.AddItemToInventory(_ctx.itemDataFactory.CreateObject(_grapeData.Production));
             _currentJuicerState = JuicerState.Empty;
         }
     }

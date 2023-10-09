@@ -1,11 +1,11 @@
 ﻿using Core;
 using Data;
-using Tools.Extensions;
+using Game.Factories;
 using UnityEngine;
 
 namespace Factories
 {
-    public class ItemDataFactory : BaseDisposable
+    public class ItemDataFactory : BaseDisposable, IFactory<Item, ItemAsset>
     {
         public struct Ctx
         {
@@ -22,27 +22,27 @@ namespace Factories
             _ctx = ctx;
         }
 
-        public Item CreateObject(ItemAsset asset, int count)
+        public Item CreateObject(ItemAsset asset)
         {
             Item item = null;
             switch (asset)
             {
-                case PlantAsset:
+                case SeedlingAsset:
                     {
-                        PlantAsset plantAsset = _ctx.plantCatalog.GetAssetById<PlantAsset>(asset.Id);
+                        SeedlingAsset seedlingAsset = _ctx.plantCatalog.GetAssetById<SeedlingAsset>(asset.Id);
                         item = new SeedlingData
                         {
-                            Id = plantAsset.Id,
-                            Name = plantAsset.Name,
-                            MaxCount = plantAsset.MaxStackCount,
-                            FruitRipeTime = plantAsset.FruitRipeTime,
-                            GrowthTime = plantAsset.GrowthTime,
-                            RipeStageCount = plantAsset.RipeStageCount,
-                            SproutStageCount = plantAsset.SproutStageCount,
-                            Icon = plantAsset.Icon,
-                            Cost = plantAsset.Cost,
-                            Count = count,
-                            Production = plantAsset.Production
+                            Id = seedlingAsset.Id,
+                            Name = seedlingAsset.Name,
+                            MaxCount = seedlingAsset.MaxStackCount,
+                            FruitRipeTime = seedlingAsset.FruitRipeTime,
+                            GrowthTime = seedlingAsset.GrowthTime,
+                            RipeStageCount = seedlingAsset.RipeStageCount,
+                            SproutStageCount = seedlingAsset.SproutStageCount,
+                            Icon = seedlingAsset.Icon,
+                            Cost = seedlingAsset.Cost,
+                            Production = seedlingAsset.Production,
+                            ViewPrefabName = seedlingAsset.View.name
                         };
                         break;
                     }
@@ -54,7 +54,6 @@ namespace Factories
                             Id = grapeAsset.Id,
                             Name = grapeAsset.Name,
                             Icon = grapeAsset.Icon,
-                            Count = count,
                             ProductionTime = grapeAsset.ProductionTime,
                             Production = grapeAsset.Production
                         };
@@ -68,7 +67,6 @@ namespace Factories
                             Id = juiceAsset.Id,
                             Name = juiceAsset.Name,
                             Icon = juiceAsset.Icon,
-                            Count = count,
                             ProductionTime = juiceAsset.ProductionTime,
                             Production = juiceAsset.Production
                         };
@@ -81,8 +79,7 @@ namespace Factories
                         {
                             Id = wineAsset.Id,
                             Name = wineAsset.Name,
-                            Icon = wineAsset.Icon,
-                            Count = count                            
+                            Icon = wineAsset.Icon,                    
                         };
                         break;
                     }

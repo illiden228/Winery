@@ -18,3 +18,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f02fc3237f6f3a840acb36db4879d290, type: 2}
   _startStock:
   - {fileID: 11400000, guid: f02fc3237f6f3a840acb36db4879d290, type: 2}
+  _plantCatalog: {fileID: 11400000, guid: 211ad6ffb7ba2234db3c8b68c6357bcc, type: 2}
+  _grapeCatalog: {fileID: 11400000, guid: ee45d2d03e6ba5f42aa59fa3f9566856, type: 2}
+  _juiceCatalog: {fileID: 11400000, guid: e2b1c10fb47ab2a45abe761e3b44ec93, type: 2}
+  _wineCatalog: {fileID: 11400000, guid: 15bdf631f7ec64e46b05988e20fea208, type: 2}
