@@ -85,9 +85,9 @@ namespace Game.Selectables
             else
             {
                 if (_currentSeedling.Ripened)
-                    _currentSeedling.PickUpFruits((seedlingData) =>
+                    _currentSeedling.PickUpFruits((Item) =>
                     {
-                        SeedlingData data = seedlingData as SeedlingData;
+                        GrapeData data = Item as GrapeData;
                         _ctx.inventory.AddItemToInventory(data, data.ProductionCount);
                     });
             }
