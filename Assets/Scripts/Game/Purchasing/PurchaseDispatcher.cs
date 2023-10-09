@@ -26,12 +26,17 @@ namespace Game.Purchasing
 
         private void OnPurchase(Purchase purchase)
         {
-            SeedlingData seedlingData = purchase.Item as SeedlingData;
-            if(_ctx.profile.TryRemoveMoney(seedlingData.Cost))
-            {
-                purchase.Callback?.Invoke();
-                _ctx.inventory.AddItemToInventory(seedlingData, seedlingData.Count);
-            }
+            Item item = purchase.Item;
+            if(purchase.PurchaseType == PurchaseType.Buy)
+                if (_ctx.profile.TryRemoveMoney(item.Cost))
+                {
+                    purchase.Callback?.Invoke();
+                    _ctx.inventory.AddItemToInventory(item, item.Count);
+                }
+            if(purchase.PurchaseType == PurchaseType.Sell)
+                _ctx.profile.AddMoneys(item.Cost * item.Count); 
+            
+            purchase.Callback?.Invoke();
         }
     }
 }

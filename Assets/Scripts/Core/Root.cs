@@ -80,7 +80,8 @@ namespace Core
                 ProductionGeneratorFactory = productionGeneratorFactory,
                 startSoils = _ctx.sceneContext.Soils,
                 startJuicers = _ctx.sceneContext.Juicers,
-                startBarrels = _ctx.sceneContext.Barrels
+                startBarrels = _ctx.sceneContext.Barrels,
+                startCar = _ctx.sceneContext.Car
             }));
 
             CharacterPm character = AddDispose(new CharacterPm(new CharacterPm.Ctx
@@ -106,7 +107,8 @@ namespace Core
                 mainCanvas = _ctx.sceneContext.MainCanvas,
                 profile = profile,
                 purchaseEvent = purchaseEvent,
-                stock = startSettingsLoader.StartStock
+                stock = startSettingsLoader.StartStock,
+                itemDataFactory = itemDataFactory
             }));
 
             SelectorPm selector = AddDispose(new SelectorPm(new SelectorPm.Ctx
@@ -143,6 +145,7 @@ namespace Core
             }
             _barrels.Dispose();
             
+            _car.Dispose();
             base.OnDispose();
         }
     }

@@ -1,5 +1,6 @@
 ﻿using Core;
 using Data;
+using Factories;
 using Game.Player;
 using Game.Purchasing;
 using Tools;
@@ -19,6 +20,7 @@ namespace UI.HUD
             public IReadOnlyProfile profile;
             public ReactiveEvent<Purchase> purchaseEvent;
             public ReactiveCollection<Item> stock;
+            public ItemDataFactory itemDataFactory;
         }
 
         private readonly Ctx _ctx;
@@ -55,6 +57,7 @@ namespace UI.HUD
                     else
                         CreateStore(storeOpen);
                 },
+                moneys = _ctx.profile.Moneys
             });
         }
 
@@ -79,7 +82,8 @@ namespace UI.HUD
                 open = open,
                 onCloseClick = () => open.Value = false,
                 purchaseEvent = _ctx.purchaseEvent,
-                stock = _ctx.stock
+                stock = _ctx.stock,
+                itemDataFactory = _ctx.itemDataFactory
             });
         }
 

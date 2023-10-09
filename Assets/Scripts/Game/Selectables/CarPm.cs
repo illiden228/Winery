@@ -57,7 +57,7 @@ namespace Game.Selectables
                     return new SelectableStatus
                     {
                         NeedSelector = true,
-                        RequiredTypeForSelector = typeof(JuiceData),
+                        RequiredTypeForSelector = typeof(WineData),
                         AnimationTriggerName = CharacterAnimation.Triggers.Take
                     };
                 }

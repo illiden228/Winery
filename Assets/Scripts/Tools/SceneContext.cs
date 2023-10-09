@@ -15,6 +15,8 @@ namespace Tools
         [SerializeField] private List<JuicerView> _juicers;
         [BoxGroup("Scene objects")]
         [SerializeField] private List<BarrelView> _barrels;
+        [BoxGroup("Scene objects")]
+        [SerializeField] private CarView _car;
         
         [SerializeField] private Transform _startPosition;
         [SerializeField] private Camera _camera;
@@ -26,7 +28,9 @@ namespace Tools
         public List<JuicerView> Juicers => _juicers;
         
         public List<BarrelView> Barrels => _barrels;
-        
+
+        public CarView Car => _car;
+
         public Transform StartPosition => _startPosition;
 
         public Camera Camera => _camera;

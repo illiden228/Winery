@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Core;
 using Data;
+using Factories;
 using Game.Player;
 using Game.Purchasing;
 using Tools;
@@ -21,6 +22,7 @@ namespace UI.Store
             public Action onCloseClick;
             public ReactiveCollection<Item> stock;
             public ReactiveEvent<Purchase> purchaseEvent;
+            public ItemDataFactory itemDataFactory;
         }
 
         private readonly Ctx _ctx;
@@ -62,12 +64,11 @@ namespace UI.Store
                 item = item,
                 onClick = () =>
                 {
+                    var newItem = _ctx.itemDataFactory.CreateObject(item.Asset);
+                    newItem.Count = item.Count;
                     _ctx.purchaseEvent.Notify(new Purchase
                     {
-                        Item = new SeedlingData
-                        {
-                            Seedling = (item as SeedlingData)?.Seedling
-                        },
+                        Item = newItem
                     });
                 }
             };
@@ -76,7 +77,8 @@ namespace UI.Store
         
         protected override void OnDispose()
         {
-            GameObject.Destroy(_view.gameObject);
+            if(_view != null)
+                GameObject.Destroy(_view.gameObject);
             base.OnDispose();
         }
     }

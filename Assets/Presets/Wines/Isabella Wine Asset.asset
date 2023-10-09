@@ -17,3 +17,4 @@ MonoBehaviour:
   _description: Isabella wine
   _icon: {fileID: 0}
   _productionCount: 1
+  _cost: 10

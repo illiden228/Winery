@@ -13,6 +13,7 @@ namespace Data
         public Sprite Icon;
         public string Name;
         public int Cost;
+        public ItemAsset Asset;
         
         public bool TryAdd(string id, int count)
         {

@@ -43,7 +43,8 @@ namespace Factories
                             Cost = seedlingAsset.Cost,
                             Production = seedlingAsset.Production,
                             ViewPrefabName = seedlingAsset.View.name,
-                            ProductionCount = seedlingAsset.ProductionCount
+                            ProductionCount = seedlingAsset.ProductionCount,
+                            Asset = asset
                         };
                         break;
                     }
@@ -57,7 +58,8 @@ namespace Factories
                             Icon = grapeAsset.Icon,
                             ProductionTime = grapeAsset.ProductionTime,
                             Production = grapeAsset.Production,
-                            ProductionCount = grapeAsset.ProductionCount
+                            ProductionCount = grapeAsset.ProductionCount,
+                            Asset = asset
                         };
                         break;
                     }
@@ -71,7 +73,8 @@ namespace Factories
                             Icon = juiceAsset.Icon,
                             ProductionTime = juiceAsset.ProductionTime,
                             Production = juiceAsset.Production,
-                            ProductionCount = juiceAsset.ProductionCount
+                            ProductionCount = juiceAsset.ProductionCount,
+                            Asset = asset
                         };
                         break;
                     }
@@ -84,6 +87,8 @@ namespace Factories
                             Name = wineAsset.Name,
                             Icon = wineAsset.Icon,    
                             ProductionCount = wineAsset.ProductionCount,
+                            Cost = wineAsset.Cost,
+                            Asset = asset
                         };
                         break;
                     }
