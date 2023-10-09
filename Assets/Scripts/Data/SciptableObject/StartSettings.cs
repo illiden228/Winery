@@ -11,6 +11,7 @@ namespace Data
         [SerializeField] private int _startMoneys;
         [SerializeField] private List<SeedlingAsset> _startPlants;
         [SerializeField] private List<SeedlingAsset> _startStock;
+        [SerializeField] private float _carTime;
         [BoxGroup("Scriptable objects")]
         [SerializeField] private PlantCatalog _plantCatalog;
 
@@ -29,5 +30,6 @@ namespace Data
         public GrapeCatalog GrapeCatalog => _grapeCatalog;
         public JuiceCatalog JuiceCatalog => _juiceCatalog;
         public WineCatalog WineCatalog => _wineCatalog;
+        public float CarTime => _carTime;
     }
 }

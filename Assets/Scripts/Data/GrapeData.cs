@@ -4,5 +4,6 @@
     {
         public ItemAsset Production;
         public float ProductionTime;
+        public int ProductionCount;
     }   
 }

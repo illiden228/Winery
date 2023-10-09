@@ -16,3 +16,4 @@ MonoBehaviour:
   _id: IsabellaWine
   _description: Isabella wine
   _icon: {fileID: 0}
+  _productionCount: 1

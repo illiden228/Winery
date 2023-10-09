@@ -59,11 +59,11 @@ namespace Game.Player
             return null;
         }
 
-        public void AddItemToInventory(Item newItem)
+        public void AddItemToInventory(Item newItem, int count)
         {
             foreach (var item in _allItems)
             {
-                if (item.TryAdd(newItem.Id, newItem.Count))
+                if (item.TryAdd(newItem.Id, count))
                 {
                     return;
                 }
@@ -71,11 +71,11 @@ namespace Game.Player
             SwitchAndAddItem(newItem);
         }
         
-        public void RemoveFromInventory(Item newItem)
+        public void RemoveFromInventory(Item newItem, int count)
         {
             foreach (var item in _allItems)
             {
-                if (item.TryRemove(newItem.Id, newItem.Count))
+                if (item.TryRemove(newItem.Id, count))
                 {
                     if (item.Count == 0)
                         break;

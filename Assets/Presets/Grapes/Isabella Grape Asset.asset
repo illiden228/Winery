@@ -18,3 +18,4 @@ MonoBehaviour:
   _icon: {fileID: 0}
   _production: {fileID: 11400000, guid: 70fec6c84719d814bb332207ca49b86f, type: 2}
   _productionTime: 0
+  _productionCount: 1

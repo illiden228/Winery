@@ -12,6 +12,7 @@ public class SeedlingAsset : ItemAsset
     [SerializeField] private int _cost;
     [SerializeField] private int _maxStackCount;
     [SerializeField] private ItemAsset _production;
+    [SerializeField] private int _productionCount;
 
     public float GrowthTime => _growTime;
     public float FruitRipeTime => _fruitRipeTime;
@@ -21,6 +22,8 @@ public class SeedlingAsset : ItemAsset
     public int RipeStageCount => _ripeStages;
     public int MaxStackCount => _maxStackCount;
     public ItemAsset Production => _production;
+
+    public int ProductionCount => _productionCount;
     //public GameObject[] GetGrowthStagePrefabs()
     //{
     //    return _growthStagePrefabs;

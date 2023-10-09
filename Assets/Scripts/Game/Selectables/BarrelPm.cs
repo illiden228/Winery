@@ -95,7 +95,7 @@ namespace Game.Selectables
                         if (_barrleProductionCallDisposable !=null)
                             _barrleProductionCallDisposable.Dispose();
                         
-                        _ctx.inventory.RemoveFromInventory(item);
+                        _ctx.inventory.RemoveFromInventory(item, 1);
 
                         _currentBarrelState = BarrelState.InProcess;
 
@@ -130,7 +130,7 @@ namespace Game.Selectables
         private void TransferJuiceToInventory()
         {
             Debug.Log($"В инвентарь добавлено: {_juiceData.Production.Name} 1 шт.");
-            _ctx.inventory.AddItemToInventory(_ctx.itemDataFactory.CreateObject(_juiceData.Production));
+            _ctx.inventory.AddItemToInventory(_ctx.itemDataFactory.CreateObject(_juiceData.Production), _juiceData.ProductionCount);
             _currentBarrelState = BarrelState.Empty;
         }
     }

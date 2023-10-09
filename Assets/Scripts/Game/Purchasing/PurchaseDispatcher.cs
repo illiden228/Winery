@@ -30,7 +30,7 @@ namespace Game.Purchasing
             if(_ctx.profile.TryRemoveMoney(seedlingData.Cost))
             {
                 purchase.Callback?.Invoke();
-                _ctx.inventory.AddItemToInventory(seedlingData);
+                _ctx.inventory.AddItemToInventory(seedlingData, seedlingData.Count);
             }
         }
     }

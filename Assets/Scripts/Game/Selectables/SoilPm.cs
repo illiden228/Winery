@@ -79,7 +79,7 @@ namespace Game.Selectables
                 _currentSeedling = (PlantPm)_ctx.ProductionGeneratorFactory.CreateObject(new GrapeData());
                 _currentSeedling.InitView(_view.transform);
                 _currentSeedling.StartGeneration(item, null);
-                _ctx.inventory.RemoveFromInventory(item);
+                _ctx.inventory.RemoveFromInventory(item, 1);
                 Debug.Log($"Выбрана грядка посажен росток {seedling.Name}!");
             }
             else
@@ -87,7 +87,8 @@ namespace Game.Selectables
                 if (_currentSeedling.Ripened)
                     _currentSeedling.PickUpFruits((seedlingData) =>
                     {
-                        _ctx.inventory.AddItemToInventory(seedlingData);
+                        SeedlingData data = seedlingData as SeedlingData;
+                        _ctx.inventory.AddItemToInventory(data, data.ProductionCount);
                     });
             }
         }

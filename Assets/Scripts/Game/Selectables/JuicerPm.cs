@@ -94,7 +94,7 @@ namespace Game.Selectables
                         if (_juicerProductionCallDisposable !=null)
                             _juicerProductionCallDisposable.Dispose();
                         
-                        _ctx.inventory.RemoveFromInventory(item);
+                        _ctx.inventory.RemoveFromInventory(item, 1);
 
                         _currentJuicerState = JuicerState.InProcess;
 
@@ -129,7 +129,7 @@ namespace Game.Selectables
         private void TransferJuiceToInventory()
         {
             Debug.Log($"В инвентарь добавлено: {_grapeData.Production.Name} 1 шт.");
-            _ctx.inventory.AddItemToInventory(_ctx.itemDataFactory.CreateObject(_grapeData.Production));
+            _ctx.inventory.AddItemToInventory(_ctx.itemDataFactory.CreateObject(_grapeData.Production), _grapeData.ProductionCount);
             _currentJuicerState = JuicerState.Empty;
         }
     }

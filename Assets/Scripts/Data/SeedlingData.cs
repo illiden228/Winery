@@ -11,5 +11,6 @@ namespace Data
         public int RipeStageCount;
         public ItemAsset Production;
         public string ViewPrefabName;
+        public int ProductionCount;
     }
 }
