@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Isabella sprout
   _id: IsabellaSprout
   _description: Isabella sprout
-  _icon: {fileID: 0}
+  _icon: {fileID: 21300000, guid: 6b8b74c52f8f486f8bc45f53b165335b, type: 3}
   _growTime: 10
   _fruitRipeTime: 4
   _sproutStages: 4
