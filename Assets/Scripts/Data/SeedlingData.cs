@@ -2,8 +2,15 @@
 
 namespace Data
 {
-    public class SeedlingData
+    public class SeedlingData : Item
     {
-        public PlantAsset Plant;
+        public SeedlingAsset Seedling;
+        public float GrowthTime;
+        public float FruitRipeTime;
+        public int SproutStageCount;
+        public int RipeStageCount;
+        public ItemAsset Production;
+        public string ViewPrefabName;
+        public int ProductionCount;
     }
 }

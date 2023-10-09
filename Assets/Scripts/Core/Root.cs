@@ -1,133 +1,145 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Core;
 using Data;
+using Factories;
 using Game.Character;
+using Game.Factories;
 using Game.Player;
+using Game.Purchasing;
 using Game.Selectables;
 using Tools;
-using Game.Factories;
-using Game.Purchasing;
 using Tools.Extensions;
-using UI;
+using UI.HUD;
+using UI.Select;
 using UniRx;
-using Unity.VisualScripting;
-using UnityEngine;
 
-public class Root : BaseMonobehaviour
+namespace Core
 {
-    [SerializeField] private Transform _startPositon;
-    [SerializeField] private Camera _camera;
-    [SerializeField] private List<SoilView> _soils;    
-    [SerializeField] private PlantCatalog _plantCatalog;
-    [SerializeField] private Canvas _mainCanvas;
-    [SerializeField] private StartSettings _startSettings;
-    private IResourceLoader _resourceLoader;
-    private CharacterPm _character;
-    private Inventory _inventory;
-    private Profile _profile;
-    private MainHUDPm _hud;
-    private List<SoilPm> _soilPms = new List<SoilPm>();
-    private PlantFactoryPm _plantFactoryPm;
-    private FactoryView factoryView;
-    private PurchaseDispatcher _purchaseDispatcher;
-    private ReactiveEvent<Purchase> _purchaseEvent;
-
-    private const string PlantFactoryName = "PlantFactory";
-    
-    private void Awake()
+    public class Root : BaseDisposable
     {
-        _purchaseEvent = new ReactiveEvent<Purchase>();
-
-        _resourceLoader = new ResourcePreLoader(new ResourcePreLoader.Ctx
+        public struct Ctx
         {
-            maxLoadDelay = 0f,
-            minLoadDelay = 0f
-        });
-
-        CharacterPm.Ctx characterCtx = new CharacterPm.Ctx
-        {
-            resourceLoader = _resourceLoader,
-            startPosition = _startPositon.position,
-            camera = _camera,
-            startSpeed = _startSettings.CharacterSpeed
-        };
-        _character = new CharacterPm(characterCtx);
-
-        factoryView = new GameObject(PlantFactoryName).AddComponent<FactoryView>();
-
-        _plantFactoryPm = new PlantFactoryPm(new PlantFactoryPm.Ctx
-        {
-            plantCatalog = _plantCatalog,
-            factoryView = factoryView
-        });
-
-        int id = 0;
-        foreach (var soil in _soils)
-        {
-            _soilPms.Add(CreateSoilPm(soil, id++));
+            public StartSettings settings;
+            public SceneContext sceneContext;
         }
 
-        List<SeedlingData> seedlingDatas = new List<SeedlingData>();
-        foreach (var plantAsset in _startSettings.StartPlants)
+        private readonly Ctx _ctx;
+        private ReactiveCollection<SoilPm> _soils;
+        private ReactiveCollection<JuicerPm> _juicers;
+        private ReactiveCollection<BarrelPm> _barrels;
+
+        public Root(Ctx ctx)
         {
-            seedlingDatas.Add(new SeedlingData
+            _ctx = ctx; 
+            ReactiveEvent<Purchase> purchaseEvent = AddDispose(new ReactiveEvent<Purchase>());
+            ReactiveEvent<SelectorInfo> selectorEvent = AddDispose(new ReactiveEvent<SelectorInfo>());
+
+            IResourceLoader resourceLoader = AddDispose(new ResourcePreLoader(new ResourcePreLoader.Ctx
             {
-                Plant = plantAsset
-            });
-        }
+                maxLoadDelay = 0f,
+                minLoadDelay = 0f
+            }));
         
-        Inventory.Ctx inventoryCtx = new Inventory.Ctx
-        {
-            startSeedlings = seedlingDatas
-        };
-        _inventory = new Inventory(inventoryCtx);
+            ItemDataFactory itemDataFactory = AddDispose(new ItemDataFactory(new ItemDataFactory.Ctx
+            {   
+                plantCatalog = _ctx.settings.PlantCatalog,
+                grapeCatalog = _ctx.settings.GrapeCatalog,
+                juiceCatalog = _ctx.settings.JuiceCatalog,
+                wineCatalog = _ctx.settings.WineCatalog
+            }));
+            
+            StartSettingsLoader startSettingsLoader = AddDispose(new StartSettingsLoader(new StartSettingsLoader.Ctx
+            {
+                settings = _ctx.settings,
+                itemDataFactory = itemDataFactory,
+            }));
+            
+            Inventory inventory = AddDispose(new Inventory(new Inventory.Ctx
+            {
+                startItems = startSettingsLoader.StartInventory,
+            }));
 
-        Profile.Ctx profileCtx = new Profile.Ctx
-        {
-            inventory = _inventory,
-            moneys = _startSettings.StartMoneys
-        };
-        _profile = new Profile(profileCtx);
+            Profile profile = AddDispose(new Profile(new Profile.Ctx
+            {
+                inventory = inventory,
+                moneys = startSettingsLoader.StartMoneys
+            }));
+            
+            ProductionGeneratorFactory productionGeneratorFactory = AddDispose(new ProductionGeneratorFactory(new ProductionGeneratorFactory.Ctx
+            {
+                resourceLoader = resourceLoader,
+                itemDataFactory = itemDataFactory,
+                inventory = inventory
+            }));
 
-        PurchaseDispatcher.Ctx purchaseDispatcherCtx = new PurchaseDispatcher.Ctx
-        {
-            inventory = _inventory,
-            profile = _profile,
-            purchaseEvent = _purchaseEvent
-        };
-        _purchaseDispatcher = new PurchaseDispatcher(purchaseDispatcherCtx);
+            StartContextLoader startContextLoader = AddDispose(new StartContextLoader(new StartContextLoader.Ctx
+            {
+                ProductionGeneratorFactory = productionGeneratorFactory,
+                startSoils = _ctx.sceneContext.Soils,
+                startJuicers = _ctx.sceneContext.Juicers,
+                startBarrels = _ctx.sceneContext.Barrels
+            }));
 
-        MainHUDPm.Ctx hudCtx = new MainHUDPm.Ctx
-        {
-            resourceLoader = _resourceLoader,
-            mainCanvas = _mainCanvas,
-            profile = _profile,
-            purchaseEvent = _purchaseEvent,
-        };
-        _hud = new MainHUDPm(hudCtx);
-    }
+            CharacterPm character = AddDispose(new CharacterPm(new CharacterPm.Ctx
+            {
+                resourceLoader = resourceLoader,
+                startPosition = _ctx.sceneContext.StartPosition.position,
+                camera = _ctx.sceneContext.Camera,
+                startSpeed = _ctx.settings.CharacterSpeed,
+                selectorEvent = selectorEvent,
+                eventSystem = _ctx.sceneContext.EventSystem
+            }));
 
-    private SoilPm CreateSoilPm(SoilView view, int id)
-    {
-        return new SoilPm(new SoilPm.Ctx
-        {
-            view = view,
-            plantFactory= _plantFactoryPm,
-            id = id            
-        });
-    }
+            PurchaseDispatcher purchaseDispatcher = AddDispose(new PurchaseDispatcher(new PurchaseDispatcher.Ctx
+            {
+                inventory = inventory,
+                profile = profile,
+                purchaseEvent = purchaseEvent
+            }));
 
-    protected override void OnDestroy()
-    {
-        foreach (var soilPm in _soilPms)
-        {
-            soilPm.Dispose();
+            MainHUDPm mainHUD = AddDispose(new MainHUDPm(new MainHUDPm.Ctx
+            {
+                resourceLoader = resourceLoader,
+                mainCanvas = _ctx.sceneContext.MainCanvas,
+                profile = profile,
+                purchaseEvent = purchaseEvent,
+                stock = startSettingsLoader.StartStock
+            }));
+
+            SelectorPm selector = AddDispose(new SelectorPm(new SelectorPm.Ctx
+            {
+                inventory = inventory,
+                mainCanvas = _ctx.sceneContext.MainCanvas,
+                resourceLoader = resourceLoader,
+                selectorEvent = selectorEvent
+            }));
+
+            _soils = startContextLoader.StartSoils;
+            _juicers = startContextLoader.StartJuicers;
+            _barrels = startContextLoader.StartBarrels;
         }
-        _resourceLoader?.Dispose();
-        _character?.Dispose();
-        _inventory?.Dispose();
-        _profile?.Dispose();
-        _hud?.Dispose();
-        base.OnDestroy();
+
+        protected override void OnDispose()
+        {
+            for (int i = 0; i < _soils.Count; i++)
+            {
+                _soils[i].Dispose();
+            }
+            _soils.Dispose();
+            
+            for (int i = 0; i < _juicers.Count; i++)
+            {
+                _juicers[i].Dispose();
+            }
+            _juicers.Dispose();
+            
+            for (int i = 0; i < _barrels.Count; i++)
+            {
+                _barrels[i].Dispose();
+            }
+            _barrels.Dispose();
+            
+            base.OnDispose();
+        }
     }
 }

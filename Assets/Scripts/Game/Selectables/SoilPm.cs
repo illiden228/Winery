@@ -1,50 +1,96 @@
 ﻿using Core;
+using Data;
+using Game.Character;
 using UnityEngine;
 using Game.Factories;
+using Game.Player;
+using Factories;
 
 namespace Game.Selectables
 {
-    public class SoilPm : BaseDisposable
+    public class SoilPm : ProdutionGenerator
     {
         public struct Ctx
         {
-            public SoilView view;
-            public PlantFactoryPm plantFactory;
-            public int id;
-        }
-
-        public enum SoilState
-        {
-            Empty,
-            Grows,
-            GrownUp
-        }
-
-        public enum SoilAction
-        {
-            PlaceGrowable,
-            WaterGrowable,
-            Harvest
+            public ProductionGeneratorFactory ProductionGeneratorFactory;
+            public Inventory inventory;
         }
 
         private readonly Ctx _ctx;
-        private PlantPm _currentPm;
+        private PlantPm _currentSeedling;
+        private SoilView _view;
+        private SeedlingData _seedlingData;
 
         public SoilPm(Ctx ctx)
         {
             _ctx = ctx;
-            _ctx.view.Init(new SoilView.Ctx
-            {
-                onSelect = OnSelect
-            });
         }
 
-        private void OnSelect()
+        public void InitView(SoilView view)
         {
-            if (_currentPm == null)
-                _currentPm = (_ctx.plantFactory.GetPlantPmCtxById("IsabellaGrape", _ctx.view.transform));
+            _view = view;
+            _view.Init(new SoilView.Ctx
+            {
+                onSelect = OnSelect,
+                getStatus = OnGetSelectStatus
+            });
+        }
+        
+        public override void StartGeneration(Item to, Item from = null)
+        {
+            if (_view == null)
+            {
+                Debug.LogError("View is missing");
+                return;
+            }
+            
+            _seedlingData = (SeedlingData)to;
+        }
 
-            Debug.Log($"Выбрана грядка {_ctx.id}");
+        private SelectableStatus OnGetSelectStatus()
+        {
+            if (_currentSeedling == null)
+                return new SelectableStatus
+                {
+                    NeedSelector = true,
+                    AnimationTriggerName = CharacterAnimation.Triggers.Take,
+                    RequiredTypeForSelector = typeof(SeedlingData)
+                };
+            if(_currentSeedling.Ripened)
+                return new SelectableStatus
+                {
+                    NeedSelector = false,
+                    AnimationTriggerName = CharacterAnimation.Triggers.Collect
+                };
+
+            return null;
+        }
+
+        private void OnSelect(Item item)
+        {
+            StartGeneration(item);
+            if (_currentSeedling == null)
+            {
+                SeedlingData seedling;
+                if(item is SeedlingData)
+                    seedling = item as SeedlingData;
+                else
+                    return;
+                _currentSeedling = (PlantPm)_ctx.ProductionGeneratorFactory.CreateObject(new GrapeData());
+                _currentSeedling.InitView(_view.transform);
+                _currentSeedling.StartGeneration(item, null);
+                _ctx.inventory.RemoveFromInventory(item, 1);
+                Debug.Log($"Выбрана грядка посажен росток {seedling.Name}!");
+            }
+            else
+            {
+                if (_currentSeedling.Ripened)
+                    _currentSeedling.PickUpFruits((seedlingData) =>
+                    {
+                        SeedlingData data = seedlingData as SeedlingData;
+                        _ctx.inventory.AddItemToInventory(data, data.ProductionCount);
+                    });
+            }
         }
     }
 }

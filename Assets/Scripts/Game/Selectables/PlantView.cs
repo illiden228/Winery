@@ -1,48 +1,96 @@
 using Core;
+
+using System;
 using UnityEngine;
 
 public class PlantView : BaseMonobehaviour
 {
     [SerializeField] private ParticleSystem _grownEffect;
-        
-    private GameObject[] _growthStages;
+    [SerializeField] private ParticleSystem _fruitRipened;
+    [SerializeField] private GameObject[] _growthSproutStages;
+    [SerializeField] private GameObject[] _fruitRipeStages;
 
     public struct Ctx
     {
         public float growthTime;
+        public float fruitRipeTime;
+    }
+
+    public enum PlantViewStage
+    {
+        Sprout,
+        Fruitful
     }
 
     private Ctx _cxt;
+    private PlantViewStage _currentPlantViewStage;
 
-    public void Init(Ctx ctx, GameObject[] growthStagesPrefabs)
+    public void Init(Ctx ctx)
     {
         _cxt = ctx;
 
-        _growthStages = new GameObject[growthStagesPrefabs.Length];
-        for (int i = 0; i < growthStagesPrefabs.Length; i++)
+        for (int i = 0; i < _growthSproutStages.Length; i++)
+            _growthSproutStages[i].SetActive(false);
+        for (int i = 0; i < _fruitRipeStages.Length; i++)
+            _fruitRipeStages[i].SetActive(false);
+
+        _currentPlantViewStage = PlantViewStage.Sprout;
+    }
+
+    public void UpdatePlantView(int newState, bool stageFinished = false)
+    {
+        switch (_currentPlantViewStage)
         {
-            _growthStages[i] = Instantiate(growthStagesPrefabs[i], transform);
-            _growthStages[i].transform.localPosition = new Vector3(0, _growthStages[i].transform.localPosition.y, 0);
-            _growthStages[i].SetActive(false);
+            case PlantViewStage.Sprout:
+                {
+                    UpdatePlantModels(_growthSproutStages, newState);
+
+                    if (stageFinished)
+                    {
+                        Debug.Log("Росток вырос!");
+
+                        _currentPlantViewStage = PlantViewStage.Fruitful;
+
+                        if (_grownEffect)
+                            _grownEffect.Play();
+                    }
+                    break;
+                }
+            case PlantViewStage.Fruitful:
+                {
+                    UpdatePlantModels(_fruitRipeStages, newState);
+
+                    if (stageFinished)
+                    {
+                        Debug.Log("Плоды созрели!");
+
+                        if (_fruitRipened)
+                            _fruitRipened.Play();
+                    }
+                    break;
+                }
         }
     }
-    
-    public void UpdatePlantView(float currentGrowthTime, bool playEffect = false)
-    {
-        //to do: refactoring
-        //
-        int index = (int)Mathf.Lerp(0, _growthStages.Length - 1, Mathf.InverseLerp(0f, _cxt.growthTime, currentGrowthTime));
-        //
 
-        for (int i = 0; i < _growthStages.Length; i++)
+    private void UpdatePlantModels(GameObject[] models, int newState)
+    {
+        if (models == null)
         {
-            if (index == i)
-                _growthStages[i].SetActive(true);
-            else
-                _growthStages[i].SetActive(false);
+            Debug.LogWarning("Пустой список моделей роста/созревания!");
+            return;
         }
 
-        if (playEffect && _grownEffect)
-            _grownEffect.Play();
+        for (int i = 0; i < models.Length; i++)
+        {
+            if (newState - 1 == i)
+                models[i].SetActive(true);
+            else
+                models[i].SetActive(false);
+        }
+    }
+
+    public void DestroyView()
+    {
+       Destroy(gameObject);
     }
 }

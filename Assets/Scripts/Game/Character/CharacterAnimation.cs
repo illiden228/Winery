@@ -10,6 +10,7 @@ namespace Game.Character
             public const string Take = "Take";
             public const string Idle = "Idle";
             public const string Dig = "Dig";
+            public const string Collect = "Collect";
         }
         public static class Bool
         {
