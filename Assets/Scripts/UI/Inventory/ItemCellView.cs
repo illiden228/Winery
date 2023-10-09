@@ -22,6 +22,7 @@ namespace UI
         [SerializeField] private Image _background;
         [SerializeField] private TMP_Text _nameLabel;
         [SerializeField] private TMP_Text _countLabel;
+
         private Ctx _ctx;
 
         public void Init(Ctx ctx)

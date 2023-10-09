@@ -12,7 +12,6 @@ namespace Data
         [SerializeField] private List<PlantAsset> _startStock;
 
         public float CharacterSpeed => _characterSpeed;
-
         public int StartMoneys => _startMoneys;
 
         public List<PlantAsset> StartPlants => _startPlants;
