@@ -11,7 +11,7 @@ namespace Game.Player
     {
         public struct Ctx
         {
-            public List<Item> startItems;
+            public ReactiveCollection<Item> startItems;
         }
 
         private readonly Ctx _ctx;

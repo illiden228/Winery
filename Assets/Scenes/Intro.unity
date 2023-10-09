@@ -229,6 +229,58 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &149134315
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 149134317}
+  - component: {fileID: 149134316}
+  m_Layer: 0
+  m_Name: Scene Context
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &149134316
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 149134315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f66fbeee4834cdeb8ad93587509161e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _soils:
+  - {fileID: 1284195991}
+  _juicers:
+  - {fileID: 186520514}
+  _startPosition: {fileID: 1481294569}
+  _camera: {fileID: 963194227}
+  _mainCanvas: {fileID: 1586258713}
+  _eventSystem: {fileID: 1842715591}
+--- !u!4 &149134317
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 149134315}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &186520509
 GameObject:
   m_ObjectHideFlags: 0
@@ -748,19 +800,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ed960de2f252ee47990f815ab6c0a8b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _startPosition: {fileID: 1481294569}
-  _camera: {fileID: 963194227}
-  _soils:
-  - {fileID: 1284195991}
-  _juicers:
-  - {fileID: 186520514}
-  _plantCatalog: {fileID: 11400000, guid: 211ad6ffb7ba2234db3c8b68c6357bcc, type: 2}
-  _grapeCatalog: {fileID: 11400000, guid: ee45d2d03e6ba5f42aa59fa3f9566856, type: 2}
-  _juiceCatalog: {fileID: 11400000, guid: e2b1c10fb47ab2a45abe761e3b44ec93, type: 2}
-  _wineCatalog: {fileID: 11400000, guid: 15bdf631f7ec64e46b05988e20fea208, type: 2}
+  _context: {fileID: 149134316}
   _startSettings: {fileID: 11400000, guid: 5dbb4d622d552f54fbbdf97c030099fa, type: 2}
-  _mainCanvas: {fileID: 1586258713}
-  _eventSystem: {fileID: 1842715591}
 --- !u!4 &1522857222
 Transform:
   m_ObjectHideFlags: 0
@@ -1063,13 +1104,14 @@ Transform:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 963194228}
   - {fileID: 705507995}
-  - {fileID: 1522857222}
   - {fileID: 105948320}
+  - {fileID: 149134317}
+  - {fileID: 1481294569}
+  - {fileID: 963194228}
+  - {fileID: 1586258714}
+  - {fileID: 1842715592}
   - {fileID: 1574505816}
   - {fileID: 1284195992}
   - {fileID: 186520513}
-  - {fileID: 1586258714}
-  - {fileID: 1842715592}
-  - {fileID: 1481294569}
+  - {fileID: 1522857222}

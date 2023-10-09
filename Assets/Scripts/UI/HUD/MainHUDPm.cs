@@ -87,7 +87,8 @@ namespace UI.HUD
         {
             _inventory?.Dispose();
             _store?.Dispose();
-            GameObject.Destroy(_view.gameObject);
+            if(_view != null)
+                GameObject.Destroy(_view.gameObject);
             base.OnDispose();
         }
     }

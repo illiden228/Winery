@@ -98,7 +98,9 @@ namespace UI.Select
         
         protected override void OnDispose()
         {
-            GameObject.Destroy(_view.gameObject);
+            ClearCells();
+            if(_view != null)
+                GameObject.Destroy(_view.gameObject);
             base.OnDispose();
         }
     }

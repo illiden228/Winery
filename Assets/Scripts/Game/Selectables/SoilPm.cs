@@ -8,40 +8,55 @@ using Factories;
 
 namespace Game.Selectables
 {
-    public class SoilPm : BaseDisposable
+    public class SoilPm : ProdutionGenerator
     {
         public struct Ctx
         {
-            public SoilView view;
-            public PlantFactory plantFactory;
-            public ItemDataFactory itemDataFactory;
+            public ProductionGeneratorFactory ProductionGeneratorFactory;
             public Inventory inventory;
-            public int id;
         }
 
         private readonly Ctx _ctx;
-        private PlantPm _currentPm;
+        private PlantPm _currentSeedling;
+        private SoilView _view;
+        private SeedlingData _seedlingData;
 
         public SoilPm(Ctx ctx)
         {
             _ctx = ctx;
-            _ctx.view.Init(new SoilView.Ctx
+        }
+
+        public void InitView(SoilView view)
+        {
+            _view = view;
+            _view.Init(new SoilView.Ctx
             {
                 onSelect = OnSelect,
                 getStatus = OnGetSelectStatus
             });
         }
+        
+        public override void StartGeneration(Item to, Item from = null)
+        {
+            if (_view == null)
+            {
+                Debug.LogError("View is missing");
+                return;
+            }
+            
+            _seedlingData = (SeedlingData)to;
+        }
 
         private SelectableStatus OnGetSelectStatus()
         {
-            if (_currentPm == null)
+            if (_currentSeedling == null)
                 return new SelectableStatus
                 {
                     NeedSelector = true,
                     AnimationTriggerName = CharacterAnimation.Triggers.Take,
                     RequiredTypeForSelector = typeof(SeedlingData)
                 };
-            if(_currentPm.Ripened)
+            if(_currentSeedling.Ripened)
                 return new SelectableStatus
                 {
                     NeedSelector = false,
@@ -53,21 +68,24 @@ namespace Game.Selectables
 
         private void OnSelect(Item item)
         {
-            if (_currentPm == null)
+            StartGeneration(item);
+            if (_currentSeedling == null)
             {
                 SeedlingData seedling;
                 if(item is SeedlingData)
                     seedling = item as SeedlingData;
                 else
                     return;
-                _currentPm = (_ctx.plantFactory.GetPlantPmCtxById(seedling, _ctx.view.transform));
+                _currentSeedling = (PlantPm)_ctx.ProductionGeneratorFactory.CreateObject(new GrapeData());
+                _currentSeedling.InitView(_view.transform);
+                _currentSeedling.StartGeneration(item, null);
                 _ctx.inventory.RemoveFromInventory(item);
-                Debug.Log($"Выбрана грядка {_ctx.id} и посажен росток {seedling.Name}!");
+                Debug.Log($"Выбрана грядка посажен росток {seedling.Name}!");
             }
             else
             {
-                if (_currentPm.Ripened)
-                    _currentPm.PickUpFruits((seedlingData) =>
+                if (_currentSeedling.Ripened)
+                    _currentSeedling.PickUpFruits((seedlingData) =>
                     {
                         _ctx.inventory.AddItemToInventory(seedlingData);
                     });
