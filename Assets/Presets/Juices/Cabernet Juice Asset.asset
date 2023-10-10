@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4c8bdb6b4020f1e4e93d8798f5bc06da, type: 3}
+  m_Name: Cabernet Juice Asset
+  m_EditorClassIdentifier: 
+  _name: Cabernet juice
+  _id: CabernetJuice
+  _description: Cabernet juice
+  _icon: {fileID: 0}
+  _production: {fileID: 11400000, guid: f7e083fa4036f34438b186c8039fc11f, type: 2}
+  _productionTime: 0
+  _productionCount: 1
