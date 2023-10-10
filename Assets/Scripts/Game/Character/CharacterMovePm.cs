@@ -20,6 +20,7 @@ namespace Game.Character
 
         private readonly Ctx _ctx;
         private IDisposable _moveDisposable;
+        private float _offset;
 
         public CharacterMovePm(Ctx ctx)
         {
@@ -31,18 +32,27 @@ namespace Game.Character
                     _moveDisposable.Dispose();
                 _ctx.model.IsMove.Value = true;
                 SoundManager.Instance.ToggleSteps(true);
+                
                 _moveDisposable = ReactiveExtensions.StartUpdate(() =>
                 {
-                    float offset = 0;
-                    if (_ctx.selectable.Value != null)
-                        offset = _ctx.selectable.Value.Offset;
-                    if (!TryMoveToPosition(position, offset))
+                    if (!TryMoveToPosition(position, _offset))
                     {
                         _moveDisposable.Dispose();
                         _ctx.model.IsMove.Value = false;
                         SoundManager.Instance.ToggleSteps(false);
                     }
                 });
+            }));
+
+            AddDispose(_ctx.selectable.Subscribe(selectable =>
+            {
+                if (selectable == null)
+                {
+                    _offset = 0;
+                    return;
+                }
+
+                _offset = selectable.Offset;
             }));
         }
 
