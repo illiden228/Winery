@@ -18,7 +18,7 @@ MonoBehaviour:
   _icon: {fileID: 21300000, guid: 6b8b74c52f8f486f8bc45f53b165335b, type: 3}
   _growTime: 10
   _fruitRipeTime: 4
-  _sproutStages: 4
+  _sproutStages: 3
   _ripeStages: 2
   _view: {fileID: 7476381845414570974, guid: 90ce1a01927a18d42a3d6f7dcae3d9cf, type: 3}
   _cost: 50
