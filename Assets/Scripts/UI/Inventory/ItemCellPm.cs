@@ -15,6 +15,8 @@ namespace UI
             public Transform container;
             public Item item;
             public Action onClick;
+            public ReactiveProperty<int> cost;
+            public bool forStore;
         }
 
         private readonly Ctx _ctx;
@@ -34,9 +36,15 @@ namespace UI
             _view = GameObject.Instantiate(viewPrefab, _ctx.container).GetComponent<ItemCellView>();
 
             ReactiveProperty<int> count = new ReactiveProperty<int>();
+            ReactiveProperty<int> cost = new ReactiveProperty<int>();
             AddDispose(_ctx.item.ObserveEveryValueChanged(x => x.Count).Subscribe(_ =>
             {
                 count.Value = _ctx.item.Count;
+            }));
+            
+            AddDispose(_ctx.item.ObserveEveryValueChanged(x => x.Cost).Subscribe(_ =>
+            {
+                cost.Value = _ctx.item.Cost;
             }));
             
             _view.Init(new ItemCellView.Ctx
@@ -45,7 +53,9 @@ namespace UI
                 background = _ctx.item.Icon,
                 name = _ctx.item.Name,
                 count = count,
-                onItemClick = _ctx.onClick
+                onItemClick = _ctx.onClick,
+                forStore = _ctx.forStore,
+                cost = cost
             });
         }
 

@@ -70,7 +70,8 @@ namespace UI.Store
                     {
                         Item = newItem
                     });
-                }
+                },
+                forStore = true
             };
             return new ItemCellPm(itemCellCtx);
         }
