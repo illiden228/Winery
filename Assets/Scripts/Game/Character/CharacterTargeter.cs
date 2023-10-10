@@ -1,4 +1,5 @@
-﻿using Core;
+﻿using System.Collections.Generic;
+using Core;
 using Game.Selectables;
 using Tools.Extensions;
 using UniRx;
@@ -57,6 +58,18 @@ namespace Game.Character
                     break;
                 }
             }
+        }
+        
+        private bool IsPointerOverUIObject()
+        {
+#if UNITY_EDITOR
+            return _ctx.eventSystem.IsPointerOverGameObject();
+#endif
+            PointerEventData eventData = new PointerEventData(_ctx.eventSystem);
+            eventData.position = Input.mousePosition;
+            List<RaycastResult> results = new List<RaycastResult>();
+            _ctx.eventSystem.RaycastAll(eventData, results);
+            return results.Count > 0;
         }
     }
 }
