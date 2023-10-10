@@ -30,7 +30,7 @@ namespace Game.Character
         {
             if (Input.GetMouseButtonDown(0))
             {
-                if(_ctx.eventSystem.IsPointerOverGameObject())
+                if(IsPointerOverUIObject())
                     return;
                 Ray ray = _ctx.camera.ScreenPointToRay(Input.mousePosition);
                 RaycastGround(ray);
@@ -64,12 +64,16 @@ namespace Game.Character
         {
 #if UNITY_EDITOR
             return _ctx.eventSystem.IsPointerOverGameObject();
+#else
+            if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Began)
+            {
+                if(_ctx.eventSystem.IsPointerOverGameObject(Input.GetTouch(0).fingerId))
+                {
+                    return true;
+                }
+            }
 #endif
-            PointerEventData eventData = new PointerEventData(_ctx.eventSystem);
-            eventData.position = Input.mousePosition;
-            List<RaycastResult> results = new List<RaycastResult>();
-            _ctx.eventSystem.RaycastAll(eventData, results);
-            return results.Count > 0;
+            return false;
         }
     }
 }
