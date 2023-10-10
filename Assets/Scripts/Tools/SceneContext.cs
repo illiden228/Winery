@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Cinemachine;
 using Core;
 using Game.Selectables;
 using NaughtyAttributes;
@@ -20,6 +21,7 @@ namespace Tools
         
         [SerializeField] private Transform _startPosition;
         [SerializeField] private Camera _camera;
+        [SerializeField] private CinemachineVirtualCamera _virtualCamera;
         [SerializeField] private Canvas _mainCanvas;    
         [SerializeField] private EventSystem _eventSystem;
 
@@ -38,5 +40,7 @@ namespace Tools
         public Canvas MainCanvas => _mainCanvas;
 
         public EventSystem EventSystem => _eventSystem;
+
+        public CinemachineVirtualCamera VirtualCamera => _virtualCamera;
     }
 }

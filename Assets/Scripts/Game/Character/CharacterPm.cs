@@ -1,4 +1,5 @@
-﻿using Core;
+﻿using Cinemachine;
+using Core;
 using Data;
 using Game.Selectables;
 using Tools;
@@ -20,6 +21,7 @@ namespace Game.Character
             public float startSpeed;
             public ReactiveEvent<SelectorInfo> selectorEvent;
             public EventSystem eventSystem;
+            public CinemachineVirtualCamera followCamera;
         }
 
         private readonly Ctx _ctx;
@@ -49,7 +51,8 @@ namespace Game.Character
             {
                 viewDisposable = AddDispose(new CompositeDisposable()),
                 animationAction = animationEvent,
-                isMove = characterModel.IsMove
+                isMove = characterModel.IsMove,
+                followCamera = _ctx.followCamera
             });
 
             CharacterMovePm.Ctx characterMoveCtx = new CharacterMovePm.Ctx
