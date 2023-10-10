@@ -28,12 +28,14 @@ namespace Game.Character
                 if (_moveDisposable != null)
                     _moveDisposable.Dispose();
                 _ctx.model.IsMove.Value = true;
+                SoundManager.Instance.ToggleSteps(true);
                 _moveDisposable = ReactiveExtensions.StartUpdate(() =>
                 {
                     if (!TryMoveToPosition(position))
                     {
                         _moveDisposable.Dispose();
                         _ctx.model.IsMove.Value = false;
+                        SoundManager.Instance.ToggleSteps(false);
                     }
                 });
             }));

@@ -111,6 +111,7 @@ namespace Game.Selectables
 
                             _currentJuicerState = JuicerState.Ready;
                         });
+                        SoundManager.Instance.PlaySimpleButton();
                         break;
                     }
                 case JuicerState.InProcess:
@@ -120,6 +121,7 @@ namespace Game.Selectables
                     }
                 case JuicerState.Ready:
                     {
+                        SoundManager.Instance.PlayJuice();
                         TransferJuiceToInventory();
                         break;
                     }

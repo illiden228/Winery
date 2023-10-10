@@ -104,6 +104,9 @@ namespace Game.Selectables
 
                             _currentState = ProductionState.Ready;
                         });
+
+                        SoundManager.Instance.PlayBarrel();
+
                         break;
                     }
                 case ProductionState.InProcess:
@@ -113,6 +116,8 @@ namespace Game.Selectables
                     }
                 case ProductionState.Ready:
                     {
+                        SoundManager.Instance.PlayBarrel();
+
                         TransferWineToInventory();
                         break;
                     }
