@@ -30,6 +30,7 @@ namespace Game.Character
                 if (_moveDisposable != null)
                     _moveDisposable.Dispose();
                 _ctx.model.IsMove.Value = true;
+                SoundManager.Instance.ToggleSteps(true);
                 _moveDisposable = ReactiveExtensions.StartUpdate(() =>
                 {
                     float offset = 0;
@@ -39,6 +40,7 @@ namespace Game.Character
                     {
                         _moveDisposable.Dispose();
                         _ctx.model.IsMove.Value = false;
+                        SoundManager.Instance.ToggleSteps(false);
                     }
                 });
             }));

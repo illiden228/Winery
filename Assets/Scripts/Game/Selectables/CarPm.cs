@@ -97,28 +97,31 @@ namespace Game.Selectables
                     Debug.Log($"Бочка начала производство вина: {item.Name}");
 
                     _barrleProductionCallDisposable = ReactiveExtensions.DelayedCall(_wineData.ProductionTime, () =>
-                    {
-                        Debug.Log($"Бочка произвела: {item.Name}");
-
-                        if (_barrleProductionCallDisposable != null)
-                            _barrleProductionCallDisposable.Dispose();
-
-                        _currentState = ProductionState.Ready;
-                        
-                        
-                        _ctx.purchaseEvent.Notify(new Purchase
                         {
-                            Item = item,
-                            PurchaseType = PurchaseType.Sell,
-                            Callback = () =>
+                            Debug.Log($"Бочка произвела: {item.Name}");
+
+                            if (_barrleProductionCallDisposable != null)
+                                _barrleProductionCallDisposable.Dispose();
+
+                            _currentState = ProductionState.Ready;
+
+                            _ctx.purchaseEvent.Notify(new Purchase
                             {
-                                Debug.Log($"Денюжки получены в размере {item.Cost * item.Count}");
-                                _currentState = ProductionState.Empty;
-                            }
+                                Item = item,
+                                PurchaseType = PurchaseType.Sell,
+                                Callback = () =>
+                                {
+                                    Debug.Log($"Денюжки получены в размере {item.Cost * item.Count}");
+                                    _currentState = ProductionState.Empty;
+                                    SoundManager.Instance.PlaySell();
+                                }
+                            });
                         });
-                    });
-                    break;
-                }
+
+                        SoundManager.Instance.PlayCar();
+
+                        break;
+                    }
                 case ProductionState.InProcess:
                 {
                     break;

@@ -81,6 +81,7 @@ namespace Game.Selectables
                 _currentSeedling.StartGeneration(item, null);
                 _ctx.inventory.RemoveFromInventory(item, 1);
                 Debug.Log($"Выбрана грядка посажен росток {seedling.Name}!");
+                SoundManager.Instance.PlayPlantGrow();
             }
             else
             {
