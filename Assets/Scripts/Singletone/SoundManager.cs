@@ -83,5 +83,4 @@ public class SoundManager : MonoBehaviour
                 _steps.Pause();
         }
     }
-
 }
