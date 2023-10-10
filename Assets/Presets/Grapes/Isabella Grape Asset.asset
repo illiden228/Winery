@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Isabella Grape
   _id: IsabellaGrape
   _description: 'Isabella Grape '
-  _icon: {fileID: 0}
+  _icon: {fileID: 21300000, guid: 69d4033f26a958d479d7d3fa62546e66, type: 3}
   _production: {fileID: 11400000, guid: 70fec6c84719d814bb332207ca49b86f, type: 2}
   _productionTime: 0
   _productionCount: 1

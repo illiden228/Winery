@@ -15,6 +15,6 @@ MonoBehaviour:
   _name: Isabella wine
   _id: IsabellaWine
   _description: Isabella wine
-  _icon: {fileID: 0}
+  _icon: {fileID: 21300000, guid: 1392dbc222629a84ea9b46688a52ec21, type: 3}
   _productionCount: 1
   _cost: 10

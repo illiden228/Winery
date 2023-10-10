@@ -15,7 +15,7 @@ MonoBehaviour:
   _name: Isabella juice
   _id: IsabellaJuice
   _description: Isabella juice
-  _icon: {fileID: 0}
+  _icon: {fileID: 21300000, guid: f11f3c2f85fb75c45a16fd9477328738, type: 3}
   _production: {fileID: 11400000, guid: 84c81042139fa1d40a5589e754adec54, type: 2}
   _productionTime: 0
   _productionCount: 1
