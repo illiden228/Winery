@@ -2,6 +2,7 @@ using Core;
 using System;
 using Data;
 using Game.Selectables;
+using UnityEngine;
 
 public class JuicerView : BaseMonobehaviour, ISelectable
 {
@@ -12,6 +13,9 @@ public class JuicerView : BaseMonobehaviour, ISelectable
     }
 
     private Ctx _cxt;
+    [SerializeField] private float _offset;
+
+    public float Offset => _offset;
 
     public void Init(Ctx ctx)
     {

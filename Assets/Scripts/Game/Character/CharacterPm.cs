@@ -60,6 +60,7 @@ namespace Game.Character
                 model = characterModel,
                 view = _view,
                 targetPosition = _targetPosition,
+                selectable = selectable,
             };
             AddDispose(new CharacterMovePm(characterMoveCtx));
 

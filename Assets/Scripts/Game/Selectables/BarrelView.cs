@@ -1,6 +1,7 @@
 ﻿using System;
 using Core;
 using Data;
+using UnityEngine;
 
 namespace Game.Selectables
 {
@@ -13,6 +14,9 @@ namespace Game.Selectables
         }
 
         private Ctx _cxt;
+        [SerializeField] private float _offset;
+
+        public float Offset => _offset;
 
         public void Init(Ctx ctx)
         {

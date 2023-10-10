@@ -6,5 +6,6 @@ namespace Game.Selectables
     {
         public void Activate(Item item);
         public SelectableStatus GetSelectState();
+        public float Offset { get; }
     }
 }
