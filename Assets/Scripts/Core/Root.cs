@@ -91,7 +91,8 @@ namespace Core
                 camera = _ctx.sceneContext.Camera,
                 startSpeed = _ctx.settings.CharacterSpeed,
                 selectorEvent = selectorEvent,
-                eventSystem = _ctx.sceneContext.EventSystem
+                eventSystem = _ctx.sceneContext.EventSystem,
+                followCamera = _ctx.sceneContext.VirtualCamera
             }));
 
             PurchaseDispatcher purchaseDispatcher = AddDispose(new PurchaseDispatcher(new PurchaseDispatcher.Ctx

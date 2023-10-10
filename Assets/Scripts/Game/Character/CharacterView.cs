@@ -1,4 +1,5 @@
-﻿using Core;
+﻿using Cinemachine;
+using Core;
 using Tools.Extensions;
 using UniRx;
 using UnityEngine;
@@ -13,6 +14,7 @@ namespace Game.Character
             public CompositeDisposable viewDisposable;
             public IReadOnlyReactiveEvent<string> animationAction;
             public IReadOnlyReactiveProperty<bool> isMove;
+            public CinemachineVirtualCamera followCamera;
         }
 
         private Ctx _ctx;
@@ -25,6 +27,7 @@ namespace Game.Character
             _ctx.animationAction.SubscribeWithSkip(_animator.SetTrigger).AddTo(_ctx.viewDisposable);
             _ctx.isMove.Subscribe(move => _animator.SetBool(CharacterAnimation.Bool.Move, move))
                 .AddTo(_ctx.viewDisposable);
+            _ctx.followCamera.Follow = transform;
         }
     }
 }
