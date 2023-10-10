@@ -1,5 +1,6 @@
 ﻿using System;
 using Core;
+using Game.Selectables;
 using TMPro;
 using Tools.Extensions;
 using UniRx;
@@ -14,6 +15,7 @@ namespace Game.Character
             public IReadOnlyReactiveProperty<Vector3> targetPosition;
             public CharacterView view;
             public CharacterModel model;
+            public IReadOnlyReactiveProperty<ISelectable> selectable;
         }
 
         private readonly Ctx _ctx;
@@ -31,7 +33,10 @@ namespace Game.Character
                 SoundManager.Instance.ToggleSteps(true);
                 _moveDisposable = ReactiveExtensions.StartUpdate(() =>
                 {
-                    if (!TryMoveToPosition(position))
+                    float offset = 0;
+                    if (_ctx.selectable.Value != null)
+                        offset = _ctx.selectable.Value.Offset;
+                    if (!TryMoveToPosition(position, offset))
                     {
                         _moveDisposable.Dispose();
                         _ctx.model.IsMove.Value = false;
@@ -41,10 +46,10 @@ namespace Game.Character
             }));
         }
 
-        private bool TryMoveToPosition(Vector3 position)
+        private bool TryMoveToPosition(Vector3 position, float offset)
         {
             Vector3 distance = position - _ctx.view.transform.position;
-            bool canMove = distance.sqrMagnitude > 0.001f;
+            bool canMove = distance.sqrMagnitude > 0.001f + offset * offset;
             _ctx.view.transform.forward = distance;
             if (canMove)
             {
