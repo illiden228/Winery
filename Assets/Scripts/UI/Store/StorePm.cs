@@ -23,6 +23,7 @@ namespace UI.Store
             public ReactiveCollection<Item> stock;
             public ReactiveEvent<Purchase> purchaseEvent;
             public ItemDataFactory itemDataFactory;
+            public IReadOnlyProfile profile;
         }
 
         private readonly Ctx _ctx;
@@ -46,7 +47,8 @@ namespace UI.Store
             {
                 viewDisposables = AddDispose(new CompositeDisposable()),
                 open = _ctx.open,
-                onCloseClick = _ctx.onCloseClick
+                onCloseClick = _ctx.onCloseClick,
+                moneys = _ctx.profile.Moneys
             });
             
             foreach (var seedling in _ctx.stock)
@@ -70,7 +72,8 @@ namespace UI.Store
                     {
                         Item = newItem
                     });
-                }
+                },
+                forStore = true
             };
             return new ItemCellPm(itemCellCtx);
         }
