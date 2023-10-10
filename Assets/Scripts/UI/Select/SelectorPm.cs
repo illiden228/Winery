@@ -90,7 +90,7 @@ namespace UI.Select
         {
             for (int i = 0; i < _itemCells.Count; i++)
             {
-                _itemCells[0].Dispose();
+                _itemCells[i].Dispose();
             }
             
             _itemCells.Clear();
