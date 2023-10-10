@@ -39,7 +39,7 @@ public class RootUndestructable : BaseMonobehaviour
     private ReactiveEvent<Purchase> _purchaseEvent;
     private ReactiveEvent<SelectorInfo> _selectorEvent;
 
-    private void Awake()
+    private void Start()
     {
         DontDestroyOnLoad(gameObject);
         _root = new Root(new Root.Ctx
