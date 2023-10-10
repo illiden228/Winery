@@ -83,7 +83,8 @@ namespace UI.HUD
                 onCloseClick = () => open.Value = false,
                 purchaseEvent = _ctx.purchaseEvent,
                 stock = _ctx.stock,
-                itemDataFactory = _ctx.itemDataFactory
+                itemDataFactory = _ctx.itemDataFactory,
+                profile = _ctx.profile
             });
         }
 
