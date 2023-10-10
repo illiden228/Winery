@@ -10,8 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2672716148640276276}
   - component: {fileID: 1777216349008088507}
-  - component: {fileID: 7855668563201346692}
-  - component: {fileID: 3578637278218884415}
+  - component: {fileID: 1250699192142179969}
   m_Layer: 3
   m_Name: Barrel
   m_TagString: Untagged
@@ -50,8 +49,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 876f3ba1eb2241d7815fef0287908153, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!65 &7855668563201346692
-BoxCollider:
+--- !u!135 &1250699192142179969
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -69,35 +68,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.5, y: 2, z: 2.5}
-  m_Center: {x: 0, y: 1, z: -0.25}
---- !u!54 &3578637278218884415
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2364722700081379372}
-  serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
+  m_Radius: 1.6456655
+  m_Center: {x: -0.059412718, y: 0.9447757, z: -0.14147675}
 --- !u!1 &8668173467784447925
 GameObject:
   m_ObjectHideFlags: 0
